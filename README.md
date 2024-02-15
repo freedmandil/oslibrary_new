@@ -23,7 +23,8 @@ To get a local copy up and running, follow these simple steps.
 1. Clone the repo:
    git clone https://github.com/freedmandil/oslibrary_new.git
 2. Install NPM packages for Angular:
-3. Install Composer dependencies for Laravel:
+3. Install Composer dependencies for Laravel
+
 Set up your .env file for Laravel based on the .env.example.
 
 ### Usage
