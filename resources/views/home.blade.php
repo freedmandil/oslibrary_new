@@ -4,5 +4,4 @@
 
 @section('content')
     <h1>Ohr Somayach Library System</h1>
-    <p></p>
 @endsection
