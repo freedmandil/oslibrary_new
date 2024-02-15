@@ -1,1 +1,1 @@
-import './bootstrap.js';
+module.imports = './bootstrap.js';
