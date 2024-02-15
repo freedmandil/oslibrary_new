@@ -13,7 +13,9 @@ return new class extends Migration
     {
         Schema::create('usr_cats', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('category_name'); // e.g., Staff, Student
+            $table->integer('loan_limit'); // Maximum number of simultaneous loans
+            $table->integer('loan_period_days'); // Default loan period in days
         });
     }
 

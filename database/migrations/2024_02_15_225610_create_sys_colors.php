@@ -13,7 +13,13 @@ return new class extends Migration
     {
         Schema::create('sys_colors', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->string('color_name');
+            $table->string('color_fg_hex');
+            $table->string('color_bg_hex');
+            $table->string('color_txt_hex');
+            $table->string('color_fg_rgb');
+            $table->string('color_bg_rgb');
+            $table->string('color_txt_rgb');
         });
     }
 

@@ -26,14 +26,16 @@ return new class extends Migration
             $table->string('address2')->nullable();
             $table->string('address3')->nullable();
             $table->string('city')->nullable();
+            $table->string('state')->nullable();
             $table->string('country')->nullable();
             $table->string('zip_post_code')->nullable();
             $table->rememberToken();
             $table->integer('cat_id');
             $table->integer('access_level')->nullable();
             $table->dateTime('date_created')->nullable();
+            $table->string('contact_status')->nullable();
             $table->timestamps();
-            $table->foreign('usr_cat_id')->references('id')->on('usr_cats');
+            $table->foreign('cat_id')->references('id')->on('usr_cats');
 
         });
     }

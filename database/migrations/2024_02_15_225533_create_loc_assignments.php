@@ -13,7 +13,14 @@ return new class extends Migration
     {
         Schema::create('loc_assignments', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('color_id');
+            $table->string('ref_code', 5);
+            $table->tinyInteger('display_code')->default(1);
+            $table->integer('starting_number');
+            $table->integer('ending_number');
+            $table->foreign('location_id')->references('id')->on('locations');
+            $table->foreign('color_id')->references('color_id')->on('colors');
         });
     }
 

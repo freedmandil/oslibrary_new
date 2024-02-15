@@ -12,8 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('lbl_barcodes', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->bigIncrements('id');
+            $table->bigInteger('book_id')->nullable();
+            $table->text('text');
+            $table->unsignedBigInteger('bg_color_id');
+            $table->unsignedBigInteger('txt_color_id');
+            $table->string('label_type');
+            $table->dateTime('label_created_date');
+            $table->foreign('book_id')->references('id')->on('lib_books');
         });
     }
 

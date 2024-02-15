@@ -12,7 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('lib_titles', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
+            $table->string('book_title');
+            $table->string('book_subtitle')->nullable();
+            $table->string('book_sub_subtitle')->nullable();
+            // Full index for fast match searching
+            $table->index('book_title', 'book_title_fulltext_index');
+            $table->index('book_subtitle', 'book_title_fulltext_index');
+            $table->index('book_sub_subtitle', 'book_title_fulltext_index');
             $table->timestamps();
         });
     }

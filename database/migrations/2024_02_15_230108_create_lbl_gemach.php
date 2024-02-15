@@ -12,8 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('lbl_gemach', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->bigIncrements('id');
+            $table->text('text');
+            $table->unsignedBigInteger('bg_color_id');
+            $table->unsignedBigInteger('txt_color_id');
+            $table->string('label_type');
+            $table->dateTime('label_created_date');
         });
     }
 

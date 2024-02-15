@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('loc_locations', function (Blueprint $table) {
-            $table->bigIncrements('id');
+        Schema::create('sys_states', function (Blueprint $table) {
+            $table->unsignedBigInteger('id');
             $table->string('name_en');
-            $table->string('name_he');
-            $table->string('building_status');
+            $table->string('short_en', 2);
+            $table->integer('country_id', 2);
+            $table->foreign('country_id')->references('id')->on('sys_countries');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('loc_locations');
+        Schema::dropIfExists('sys_state');
     }
 };

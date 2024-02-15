@@ -12,7 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('lib_publishers', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
+            $table->string('name_en');
+            $table->string('name_he');
+            $table->text('address')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->text('email')->nullable();
+            $table->string('country');
+            $table->string('city');
+            $table->string('contact_status')->nullable();
             $table->timestamps();
         });
     }

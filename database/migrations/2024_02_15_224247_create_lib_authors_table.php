@@ -12,7 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('lib_authors', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
+            $table->string('prefix')->nullable();
+            $table->string('last_name');
+            $table->string('first_name');
+            $table->string('middle_name')->nullable();
+            $table->string('suffix')->nullable();
+            $table->string('acronym')->nullable();
+            $table->string('nickname')->nullable();
+            $table->index('last_name', 'book_title_fulltext_index');
+            $table->index('first_name', 'book_title_fulltext_index');
+            $table->index('acronym', 'book_title_fulltext_index');
+            $table->index('nickname', 'nickname_fulltext_index');
             $table->timestamps();
         });
     }

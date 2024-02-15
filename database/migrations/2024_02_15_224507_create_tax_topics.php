@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tax_topics', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
+            $table->string('name_en');
+            $table->string('name_he');
             $table->timestamps();
         });
     }
