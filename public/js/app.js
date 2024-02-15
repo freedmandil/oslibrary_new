@@ -2076,12 +2076,9 @@ module.exports = Array.isArray || function (arr) {
 /*!*******************************!*\
   !*** ./resources/css/app.css ***!
   \*******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (() => {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-// extracted by mini-css-extract-plugin
-
+throw new Error("Module build failed (from ./node_modules/mini-css-extract-plugin/dist/loader.js):\nModuleBuildError: Module build failed (from ./node_modules/postcss-loader/dist/cjs.js):\nError [ERR_REQUIRE_ESM]: require() of ES Module /Users/daniel/www/github/oslibrary/postcss.config.js from /Users/daniel/www/github/oslibrary/node_modules/cosmiconfig/dist/loaders.js not supported.\nInstead change the require of postcss.config.js in /Users/daniel/www/github/oslibrary/node_modules/cosmiconfig/dist/loaders.js to a dynamic import() which is available in all CommonJS modules.\n    at module.exports (/Users/daniel/www/github/oslibrary/node_modules/import-fresh/index.js:32:59)\n    at loadJs (/Users/daniel/www/github/oslibrary/node_modules/cosmiconfig/dist/loaders.js:16:18)\n    at Explorer.loadFileContent (/Users/daniel/www/github/oslibrary/node_modules/cosmiconfig/dist/Explorer.js:84:32)\n    at Explorer.createCosmiconfigResult (/Users/daniel/www/github/oslibrary/node_modules/cosmiconfig/dist/Explorer.js:89:36)\n    at Explorer.loadSearchPlace (/Users/daniel/www/github/oslibrary/node_modules/cosmiconfig/dist/Explorer.js:70:31)\n    at async Explorer.searchDirectory (/Users/daniel/www/github/oslibrary/node_modules/cosmiconfig/dist/Explorer.js:55:27)\n    at async run (/Users/daniel/www/github/oslibrary/node_modules/cosmiconfig/dist/Explorer.js:35:22)\n    at async cacheWrapper (/Users/daniel/www/github/oslibrary/node_modules/cosmiconfig/dist/cacheWrapper.js:16:18)\n    at async cacheWrapper (/Users/daniel/www/github/oslibrary/node_modules/cosmiconfig/dist/cacheWrapper.js:16:18)\n    at async cacheWrapper (/Users/daniel/www/github/oslibrary/node_modules/cosmiconfig/dist/cacheWrapper.js:16:18)\n    at async Explorer.search (/Users/daniel/www/github/oslibrary/node_modules/cosmiconfig/dist/Explorer.js:27:20)\n    at async loadConfig (/Users/daniel/www/github/oslibrary/node_modules/postcss-loader/dist/utils.js:68:16)\n    at async Object.loader (/Users/daniel/www/github/oslibrary/node_modules/postcss-loader/dist/index.js:54:22)\n    at processResult (/Users/daniel/www/github/oslibrary/node_modules/webpack/lib/NormalModule.js:764:19)\n    at /Users/daniel/www/github/oslibrary/node_modules/webpack/lib/NormalModule.js:866:5\n    at /Users/daniel/www/github/oslibrary/node_modules/loader-runner/lib/LoaderRunner.js:400:11\n    at /Users/daniel/www/github/oslibrary/node_modules/loader-runner/lib/LoaderRunner.js:252:18\n    at context.callback (/Users/daniel/www/github/oslibrary/node_modules/loader-runner/lib/LoaderRunner.js:124:13)\n    at Object.loader (/Users/daniel/www/github/oslibrary/node_modules/postcss-loader/dist/index.js:56:7)");
 
 /***/ }),
 
@@ -4354,7 +4351,7 @@ function buildURL(url, params, options) {
   if (!params) {
     return url;
   }
-  
+
   const _encode = options && options.encode || encode;
 
   const serializeFn = options && options.serialize;
@@ -6302,7 +6299,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/ 	
+/******/
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -6316,50 +6313,15 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/ 	
+/******/
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-/******/ 	
+/******/
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/ 	
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = __webpack_modules__;
-/******/ 	
+/******/
 /************************************************************************/
-/******/ 	/* webpack/runtime/chunk loaded */
-/******/ 	(() => {
-/******/ 		var deferred = [];
-/******/ 		__webpack_require__.O = (result, chunkIds, fn, priority) => {
-/******/ 			if(chunkIds) {
-/******/ 				priority = priority || 0;
-/******/ 				for(var i = deferred.length; i > 0 && deferred[i - 1][2] > priority; i--) deferred[i] = deferred[i - 1];
-/******/ 				deferred[i] = [chunkIds, fn, priority];
-/******/ 				return;
-/******/ 			}
-/******/ 			var notFulfilled = Infinity;
-/******/ 			for (var i = 0; i < deferred.length; i++) {
-/******/ 				var [chunkIds, fn, priority] = deferred[i];
-/******/ 				var fulfilled = true;
-/******/ 				for (var j = 0; j < chunkIds.length; j++) {
-/******/ 					if ((priority & 1 === 0 || notFulfilled >= priority) && Object.keys(__webpack_require__.O).every((key) => (__webpack_require__.O[key](chunkIds[j])))) {
-/******/ 						chunkIds.splice(j--, 1);
-/******/ 					} else {
-/******/ 						fulfilled = false;
-/******/ 						if(priority < notFulfilled) notFulfilled = priority;
-/******/ 					}
-/******/ 				}
-/******/ 				if(fulfilled) {
-/******/ 					deferred.splice(i--, 1)
-/******/ 					var r = fn();
-/******/ 					if (r !== undefined) result = r;
-/******/ 				}
-/******/ 			}
-/******/ 			return result;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -6371,7 +6333,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/global */
 /******/ 	(() => {
 /******/ 		__webpack_require__.g = (function() {
@@ -6383,12 +6345,12 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 			}
 /******/ 		})();
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-/******/ 	
+/******/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -6399,69 +6361,14 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/jsonp chunk loading */
-/******/ 	(() => {
-/******/ 		// no baseURI
-/******/ 		
-/******/ 		// object to store loaded and loading chunks
-/******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
-/******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		var installedChunks = {
-/******/ 			"/js/app": 0,
-/******/ 			"css/app": 0
-/******/ 		};
-/******/ 		
-/******/ 		// no chunk on demand loading
-/******/ 		
-/******/ 		// no prefetching
-/******/ 		
-/******/ 		// no preloaded
-/******/ 		
-/******/ 		// no HMR
-/******/ 		
-/******/ 		// no HMR manifest
-/******/ 		
-/******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
-/******/ 		
-/******/ 		// install a JSONP callback for chunk loading
-/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
-/******/ 			var [chunkIds, moreModules, runtime] = data;
-/******/ 			// add "moreModules" to the modules object,
-/******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0;
-/******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
-/******/ 				for(moduleId in moreModules) {
-/******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
-/******/ 						__webpack_require__.m[moduleId] = moreModules[moduleId];
-/******/ 					}
-/******/ 				}
-/******/ 				if(runtime) var result = runtime(__webpack_require__);
-/******/ 			}
-/******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			for(;i < chunkIds.length; i++) {
-/******/ 				chunkId = chunkIds[i];
-/******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
-/******/ 					installedChunks[chunkId][0]();
-/******/ 				}
-/******/ 				installedChunks[chunkId] = 0;
-/******/ 			}
-/******/ 			return __webpack_require__.O(result);
-/******/ 		}
-/******/ 		
-/******/ 		var chunkLoadingGlobal = self["webpackChunkoslibrary"] = self["webpackChunkoslibrary"] || [];
-/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
-/******/ 	})();
-/******/ 	
+/******/
 /************************************************************************/
-/******/ 	
+/******/
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
-/******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/js/app.js")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/css/app.css")))
-/******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
-/******/ 	
+/******/ 	__webpack_require__("./resources/js/app.js");
+/******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
+/******/ 	var __webpack_exports__ = __webpack_require__("./resources/css/app.css");
+/******/
 /******/ })()
 ;
