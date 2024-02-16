@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('book_title_id');
             $table->string('book_edition')->nullable();
             $table->text('book_notes')->nullable();
-            $table->unsignedBigInteger('book_author_id');
+            $table->unsignedBigInteger('author_id');
             $table->string('book_type');
             $table->unsignedBigInteger('book_topic_id');
             $table->unsignedBigInteger('book_category_id');

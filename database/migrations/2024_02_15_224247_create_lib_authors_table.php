@@ -24,7 +24,6 @@ return new class extends Migration
             $table->index('first_name', 'first_name_fulltext_index');
             $table->index('acronym', 'acronym_fulltext_index');
             $table->index('nickname', 'nickname_fulltext_index');
-            $table->timestamps();
         });
     }
 

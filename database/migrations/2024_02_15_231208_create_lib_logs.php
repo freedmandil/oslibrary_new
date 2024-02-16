@@ -13,16 +13,14 @@ return new class extends Migration
     {
         Schema::create('lib_logs', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('book_id');
-            $table->bigInteger('location_id');
-            $table->bigInteger('locassign_id');
+            $table->unsignedBigInteger('book_id');
+            $table->unsignedBigInteger('location_id');
+            $table->unsignedBigInteger('loc_assign_id');
             $table->string('barcode');
-            $table->dateTime('timestamp');
-            $table->foreign('book_id')->references('id')->on('lib_books');
-            $table->foreign('locassign_id')->references('id')->on('loc_locations');
-            $table->foreign('location_id')->references('id')->on('loc_assignments');
-
             $table->timestamps();
+            $table->foreign('book_id')->references('id')->on('lib_books');
+            $table->foreign('location_id')->references('id')->on('loc_locations');
+            $table->foreign('loc_assign_id')->references('id')->on('loc_assignments');
         });
     }
 

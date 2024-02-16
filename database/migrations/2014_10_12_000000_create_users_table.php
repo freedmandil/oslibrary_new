@@ -11,6 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints();
+
         Schema::create('usr_users', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
@@ -27,7 +29,7 @@ return new class extends Migration
             $table->string('address3')->nullable();
             $table->string('city')->nullable();
             $table->string('state')->nullable();
-            $table->string('country')->nullable();
+            $table->unsignedBigInteger('country_id');
             $table->string('zip_post_code')->nullable();
             $table->rememberToken();
             $table->integer('cat_id');
@@ -36,7 +38,7 @@ return new class extends Migration
             $table->string('contact_status')->nullable();
             $table->timestamps();
             $table->foreign('cat_id')->references('id')->on('usr_cats');
-
+            $table->foreign('country_id')->references('id')->on('sys_countries');
         });
     }
 

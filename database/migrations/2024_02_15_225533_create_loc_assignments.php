@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('loc_assignments', function (Blueprint $table) {
-            $table->id();
+            $table->bigIncrements('id');
             $table->unsignedBigInteger('location_id');
             $table->unsignedBigInteger('color_id');
             $table->string('ref_code', 5);

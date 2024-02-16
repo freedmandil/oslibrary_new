@@ -20,7 +20,6 @@ return new class extends Migration
             $table->index('book_title', 'book_title_fulltext_index');
             $table->index('book_subtitle', 'book_subtitle_fulltext_index');
             $table->index('book_sub_subtitle', 'book_sub_subtitle_fulltext_index');
-            $table->timestamps();
         });
     }
 

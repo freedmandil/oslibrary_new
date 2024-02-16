@@ -18,10 +18,10 @@ return new class extends Migration
             $table->text('address')->nullable();
             $table->string('phone_number')->nullable();
             $table->text('email')->nullable();
-            $table->string('country');
             $table->string('city');
             $table->string('contact_status')->nullable();
-            $table->timestamps();
+            $table->unsignedBigInteger('country_id');
+            $table->foreign('country_id')->references('id')->on('sys_countries');
         });
     }
 
