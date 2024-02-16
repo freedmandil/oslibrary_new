@@ -37,7 +37,6 @@ return new class extends Migration
             $table->string('publication_location')->nullable();
             $table->foreign('book_title_id')->references('id')->on('lib_titles');
             $table->foreign('publisher_id')->references('id')->on('lib_publishers');
-            $table->foreign('author_id')->references('id')->on('lib_authors');
             $table->foreign('book_topic_id')->references('id')->on('tax_topics');
             $table->foreign('book_category_id')->references('id')->on('tax_categories');
             $table->foreign('subcategory_id')->references('id')->on('tax_subcat');

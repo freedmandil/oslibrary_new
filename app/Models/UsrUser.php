@@ -8,9 +8,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+use Illuminate\Database\Eloquent\Model;
+
+class usrUser extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    protected $table = 'usr_users';
 
     /**
      * The attributes that are mass assignable.
@@ -18,9 +22,27 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
         'email',
+        'email_verified_at',
         'password',
+        'first_name',
+        'last_name',
+        'alt_name',
+        'email2',
+        'phone1',
+        'phone2',
+        'address1',
+        'address2',
+        'address3',
+        'city',
+        'state',
+        'country_id',
+        'zip_post_code',
+        'rememberToken',
+        'cat_id',
+        'access_level',
+        'date_created',
+        'contact_status',
     ];
 
     /**
@@ -42,4 +64,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+
+    // User belongs to a usr_cats
+    public function usr_cats()
+    {
+        return $this->belongsTo(usr_cats::class, 'cat_id');
+    }
+
+    // User belongs to a sys_country
+    public function sys_country()
+    {
+        return $this->belongsTo(sys_countries::class, 'country_id');
+    }
+
 }

@@ -5,8 +5,8 @@
  */
 module.exports = {
     content: [
-        '../js/**/*.js',
-        './**/*.{js,html}'
+        "./resources/**/*.blade.php",
+        "./resources/**/*.js",
     ],
     theme: {
         extend: {},
