@@ -20,9 +20,9 @@ return new class extends Migration
             $table->string('suffix')->nullable();
             $table->string('acronym')->nullable();
             $table->string('nickname')->nullable();
-            $table->index('last_name', 'book_title_fulltext_index');
-            $table->index('first_name', 'book_title_fulltext_index');
-            $table->index('acronym', 'book_title_fulltext_index');
+            $table->index('last_name', 'last_name_fulltext_index');
+            $table->index('first_name', 'first_name_fulltext_index');
+            $table->index('acronym', 'acronym_fulltext_index');
             $table->index('nickname', 'nickname_fulltext_index');
             $table->timestamps();
         });

@@ -23,8 +23,8 @@ return new class extends Migration
             $table->integer('renewal_count')->default(0); // Tracks how many times a loan has been renewed
 
             // Foreign keys
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('book_id')->references('id')->on('books');
+            $table->foreign('user_id')->references('id')->on('usr_users');
+            $table->foreign('book_id')->references('id')->on('lib_books');
 
             // Indexes
             $table->index('user_id');

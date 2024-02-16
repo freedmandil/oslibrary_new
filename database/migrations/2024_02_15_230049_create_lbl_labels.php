@@ -13,13 +13,11 @@ return new class extends Migration
     {
         Schema::create('lbl_labels', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->bigInteger('book_id')->nullable();
             $table->text('text');
             $table->unsignedBigInteger('bg_color_id');
             $table->unsignedBigInteger('txt_color_id');
             $table->string('label_type');
             $table->dateTime('label_created_date');
-            $table->foreign('book_id')->references('id')->on('lib_books');
         });
     }
 
