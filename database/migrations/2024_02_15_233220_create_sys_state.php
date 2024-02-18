@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('sys_states', function (Blueprint $table) {
             $table->unsignedBigInteger('id');
             $table->string('name_en');
-            $table->string('short_en', 2);
+            $table->string('short_en', 3);
             $table->unsignedBigInteger('country_id');
             $table->foreign('country_id')->references('id')->on('sys_countries');
         });

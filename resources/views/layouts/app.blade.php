@@ -29,9 +29,7 @@
             @endif
 
 <main>
-    <div class="flex justify-center">
         @yield('content')
-    </div>
 </main>
 
 <footer>

@@ -26,13 +26,13 @@
                                     <label class="label">
                                         <span class="label-text">Email</span>
                                     </label>
-                                    <input type="email" placeholder="email@example.com" class="input input-bordered" name="email" required>
+                                    <input type="email" placeholder="" autocomplete="" class="input input-bordered" name="email" required>
                                 </div>
                                 <div class="form-control">
                                     <label class="label">
                                         <span class="label-text">Password</span>
                                     </label>
-                                    <input type="password" placeholder="********" class="input input-bordered" name="password" required>
+                                    <input type="password" placeholder="" class="input input-bordered" autocomplete="" name="password" required>
                                 </div>
                                 <div class="form-control mt-4">
                                     <button type="submit" class="btn btn-primary">Login</button>

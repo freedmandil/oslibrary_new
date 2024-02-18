@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\UsrUser;
 use App\Models\SysCountry;
+use App\Models\SysState;
 use App\Models\UsrCat;
 class RegisterController extends Controller
 {
@@ -32,7 +33,7 @@ class RegisterController extends Controller
             'address2' => ['nullable', 'string', 'max:255'],
             'address3' => ['nullable', 'string', 'max:255'],
             'city' => ['nullable', 'string', 'max:255'],
-            'state' => ['nullable', 'string', 'max:255'],
+            'state_id' => ['nullable', 'integer', 'exists:sys_states,id'],
             'country_id' => ['required', 'integer', 'exists:sys_countries,id'],
             'zip_post_code' => ['nullable', 'string', 'max:255'],
             // Assuming cat_id is always required and should exist in usr_cats table
@@ -47,9 +48,13 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
-        $this->validator($request->all())->validate();
+        $validation = $this->validator($request->all())->validate();
+        if ($validation->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
 
-        $user = User::create([
+        // Post-registration actions (e.g., login, redirect, flash message)
+        $user = UsrUser::create([
             'email' => $request->email,
             'email_verified_at' => null, // You might set this upon email verification
             'password' => Hash::make($request->password),
@@ -63,7 +68,7 @@ class RegisterController extends Controller
             'address2' => $request->address2,
             'address3' => $request->address3,
             'city' => $request->city,
-            'state' => $request->state,
+            'state_id' => $request->state_id,
             'country_id' => $request->country_id,
             'zip_post_code' => $request->zip_post_code,
             'cat_id' => $request->cat_id,
@@ -72,7 +77,7 @@ class RegisterController extends Controller
             // 'remember_token' will be generated automatically if you're using Laravel's Auth system
         ]);
 
-        // Post-registration actions (e.g., login, redirect, flash message)
+        // If validation fails, redirect back with error messages
 
         return redirect()->route('home')->with('success', 'Registration successful.');
     }
@@ -82,8 +87,9 @@ class RegisterController extends Controller
     {
         $countries = SysCountry::all(); // Fetch all countries
         $categories = UsrCat::all(); // Fetch all categories
+        $states = SysState::all(); // Fetch all states
 
         // Pass the countries and categories to your view
-        return view('auth.register', compact('countries', 'categories'));
+        return view('auth.register', compact('countries', 'categories', 'states'));
     }
 }

@@ -28,7 +28,7 @@ return new class extends Migration
             $table->string('address2')->nullable();
             $table->string('address3')->nullable();
             $table->string('city')->nullable();
-            $table->string('state')->nullable();
+            $table->bigInteger('state_id')->nullable();
             $table->unsignedBigInteger('country_id');
             $table->string('zip_post_code')->nullable();
             $table->rememberToken();
@@ -38,6 +38,7 @@ return new class extends Migration
             $table->string('contact_status')->nullable();
             $table->timestamps();
             $table->foreign('cat_id')->references('id')->on('usr_cats');
+            $table->foreign('state_id')->references('id')->on('sys_states');
             $table->foreign('country_id')->references('id')->on('sys_countries');
         });
     }

@@ -35,7 +35,7 @@ class usrUser extends Authenticatable
         'address2',
         'address3',
         'city',
-        'state',
+        'state_id',
         'country_id',
         'zip_post_code',
         'rememberToken',

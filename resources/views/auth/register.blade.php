@@ -1,9 +1,9 @@
 <x-guest-layout>
-    <div class="flex justify-center"> <!-- Center the form container -->
-        <form method="POST" action="{{ route('register') }}" class="full bg-white rounded px-4 pt-6 pb-8 mb-4"> <!-- Form container with 50% width -->
+    <div class="container justify-center">
+        <form method="POST" action="{{ route('register') }}" class="w-full bg-white rounded px-4 pt-6 pb-8 mb-4"> <!-- Form container with 50% width -->
             @csrf
 
-            <div class="grid grid-cols-2 gap-4"> <!-- Grid layout for form fields -->
+            <div class="grid grid-cols-2 gap-6 "> <!-- Grid layout for form fields -->
                 <!-- First Name -->
                 <div>
                     <x-input-label for="first_name" :value="__('First Name')" />
@@ -35,7 +35,7 @@
                 <!-- Password -->
                 <div>
                     <x-input-label for="password" :value="__('Password')" />
-                    <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
+                    <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="" />
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
 
@@ -88,21 +88,25 @@
                     <x-input-error :messages="$errors->get('city')" class="mt-2" />
                 </div>
 
-                <!-- State -->
-                <div>
-                    <x-input-label for="state" :value="__('State')" />
-                    <x-text-input id="state" class="block mt-1 w/full" type="text" name="state" :value="old('state')" autocomplete="state" />
-                    <x-input-error :messages="$errors->get('state')" class="mt-2" />
-                </div>
-
                 <!-- Country -->
-                <div>
+                <div class="form-control">
                     <x-input-label for="country_id" :value="__('Country')" />
-                    <select id="country_id" name="country_id" class="block mt-1 w-full" required>
+                    <select id="country_id" name="country_id" class="block mt-1 w-full select " required>
                         <option value="">Select Country</option>
                         {{-- Assuming you have a countries variable passed to your view --}}
+                        @foreach (['Israel', 'United States of America', 'Canada', 'United Kingdom', 'Australia', 'South Africa', 'France', 'Brazil', 'Chile'] as $preferredCountry)
+                            @php
+                                $country = $countries->where('name_en', $preferredCountry)->first();
+                            @endphp
+                            @if ($country)
+                                <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name_en }}</option>
+                            @endif
+                        @endforeach
+                        <option disabled>───────────</option> <!-- This line acts as a separator -->
                         @foreach ($countries as $country)
-                            <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name }}</option>
+                            @if (!in_array($country->name_en, ['Israel', 'United States', 'Canada', 'United Kingdom', 'Australia', 'South Africa', 'France', 'Brazil', 'Chile']))
+                                <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name_en }}</option>
+                            @endif
                         @endforeach
                     </select>
                     <x-input-error :messages="$errors->get('country_id')" class="mt-2" />
@@ -115,14 +119,51 @@
                     <x-input-error :messages="$errors->get('zip_post_code')" class="mt-2" />
                 </div>
 
-                <!-- Category -->
+                <!-- State -->
                 <div>
+                    <x-input-label for="state" :value="__('State')" />
+                    <select id="state" name="state" class="block mt-1 w-full select">
+                        <option value="">Select State</option>
+                        {{-- The following options will be populated dynamically using JavaScript --}}
+                        @foreach ($states as $state)
+                            <option value="{{ $state->id }}" data-country="{{ $state->country_id }}">{{ $state->name_en }}</option>
+                        @endforeach
+                    </select>
+                    <x-input-error :messages="$errors->get('state')" class="mt-2" />
+                </div>
+
+                <script>
+                    // Get references to the country select element and state select element
+                    const countrySelect = document.getElementById('country_id');
+                    const stateSelect = document.getElementById('state');
+                    // Hide all states initially
+                    stateSelect.querySelectorAll('option').forEach(option => {
+                        option.style.display = 'none';
+                    });
+
+                    // Add event listener to country select element to dynamically update states when the country selection changes
+                    countrySelect.addEventListener('change', function () {
+                        const selectedCountryId = this.value;
+                        // Show states for the selected country and hide others
+                        stateSelect.querySelectorAll('option').forEach(option => {
+                            if (option.dataset.country === selectedCountryId || option.value === '') {
+                                option.style.display = 'block';
+                            } else {
+                                option.style.display = 'none';
+                            }
+                        });
+                        // Reset the state select to the default option
+                        stateSelect.value = '';
+                    });
+                </script>
+
+                <!-- User Type -->
+                <div class="form-control">
                     <x-input-label for="cat_id" :value="__('Category')" />
-                    <select id="cat_id" name="cat_id" class="block mt-1 w-full">
-                        <option value="">Select Category</option>
-                        {{-- Assuming you have a categories variable passed to your view --}}
+                    <select id="cat_id" name="cat_id" class="block mt-1 w-full select" required>
+                        <option value="">Select User Type</option>
                         @foreach ($categories as $category)
-                            <option value="{{ $category->id }}" {{ old('cat_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                            <option value="{{ $category->id }}" {{ old('cat_id') == $category->id ? 'selected' : '' }}>{{ $category->category_name }}</option>
                         @endforeach
                     </select>
                     <x-input-error :messages="$errors->get('cat_id')" class="mt-2" />
@@ -135,9 +176,7 @@
                     </button>
                 </div>
             </div>
-    </form>
+         </form>
     </div>
-
-
 </x-guest-layout>
 
