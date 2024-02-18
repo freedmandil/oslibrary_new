@@ -113,11 +113,12 @@ class RegisterController extends Controller
 
     public function showRegistrationForm()
     {
+        $page_title = 'Register New User';
         $countries = SysCountry::all(); // Fetch all countries
         $categories = UsrCat::all(); // Fetch all categories
         $states = SysState::all(); // Fetch all states
 
         // Pass the countries and categories to your view
-        return view('auth.register', compact('countries', 'categories', 'states'));
+        return view('auth.register', compact('countries', 'categories', 'states', 'page_title'));
     }
 }
