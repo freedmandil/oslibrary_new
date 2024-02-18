@@ -1,51 +1,54 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-    <div class="navbar bg-base-100 px-4">
+<nav x-data="{ open: false }" class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <div class="container">
         <!-- Logo and Title -->
-        <div class="navbar-start">
-            <a href="{{ route('dashboard') }}" class="btn btn-ghost normal-case text-xl">
-                <img src="{{ asset('svg/library_logo.svg') }}" alt="Library Logo" class="w-10 h-10 mr-2">
-                @yield('title')
-            </a>
-        </div>
+        <a href="{{ route('dashboard') }}" class="navbar-brand">
+            <img src="{{ asset('svg/library_logo.svg') }}" alt="Library Logo" class="d-inline-block align-top" width="30" height="30">
+            @yield('title')
+        </a>
 
-        <!-- Right-side Links -->
-        <div class="navbar-end items-center">
-            <!-- Search -->
-            <a href="{{ route('search') }}" class="btn btn-ghost">Search</a>
+        <!-- Toggler/collapsible Button -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            <!-- Login Dropdown -->
-            <div class="dropdown dropdown-end dropdown-hover">
-                <label tabindex="0" class="btn btn-ghost">Login</label>
-                <!-- Adjust dropdown positioning -->
-                <div tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52" style="right:0;">
-                    <div class="card card-compact w-96 bg-base-100 shadow-xl" style="background-color: rgba(255, 255, 255, 1);">
-                        <div class="card-body">
-                            <form method="POST" action="{{ route('login') }}">
-                                @csrf
-                                <div class="form-control">
-                                    <label class="label">
-                                        <span class="label-text">Email</span>
-                                    </label>
-                                    <input type="email" placeholder="" autocomplete="" class="input input-bordered" name="email" required>
+        <!-- Navbar Links -->
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <!-- Search -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('search') }}">Search</a>
+                </li>
+
+                <!-- Login Dropdown -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Login
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li>
+                            <div class="card">
+                                <div class="card-body">
+                                    <form method="POST" action="{{ route('login') }}">
+                                        @csrf
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" class="form-control" id="email" name="email" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="password" class="form-label">Password</label>
+                                            <input type="password" class="form-control" id="password" name="password" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Login</button>
+                                        <div class="text-sm mt-2 text-center">
+                                            <a href="{{ route('register') }}" class="text-primary">Not registered? Sign up</a>
+                                        </div>
+                                    </form>
                                 </div>
-                                <div class="form-control">
-                                    <label class="label">
-                                        <span class="label-text">Password</span>
-                                    </label>
-                                    <input type="password" placeholder="" class="input input-bordered" autocomplete="" name="password" required>
-                                </div>
-                                <div class="form-control mt-4">
-                                    <button type="submit" class="btn btn-primary">Login</button>
-                                </div>
-                                <div class="text-sm mt-4 text-center">
-                                    <a href="{{ route('register') }}" class="link link-primary">Not registered? Sign up</a>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </div>
-
 </nav>

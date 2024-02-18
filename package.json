@@ -1,46 +1,46 @@
 {
-  "private": true,
-  "type": "commonjs",
-  "scripts": {
-    "dev": "mix",
-    "build": "dev",
-    "development": "mix",
-    "watch": "mix watch",
-    "watch-poll": "mix watch -- --watch-options-poll=1000",
-    "hot": "mix watch --hot",
-    "prod": "npm run production",
-    "production": "mix --production"
-  },
-  "devDependencies": {
-    "@babel/preset-env": "^7.23.9",
-    "@popperjs/core": "^2.11.8",
-    "autoprefixer": "^10.4.17",
-    "axios": "^1.6.4",
-    "bootstrap": "^5.3.2",
-    "bootstrap-icons": "^1.11.3",
-    "laravel-mix": "^6.0.49",
-    "laravel-vite-plugin": "^1.0.0",
-    "less": "^4.2.0",
-    "less-loader": "^12.2.0",
-    "postcss": "^8.4.35",
-    "resolve-url-loader": "^5.0.0",
-    "sass": "^1.70.0",
-    "sass-loader": "^12.6.0"
-  },
-  "name": "oslibrary",
-  "description": "OS Library is a web application developed for Ohr Somayach/Tannenbaum College in Jerusalem, Israel. This application is designed to facilitate the management of Seforim (books) within the Yeshiva and its surroundings, providing an efficient and user-friendly platform for tracking, cataloging, and accessing books.",
-  "version": "1.0.0",
-  "main": "webpack.config.cjs",
-  "directories": {
-    "test": "tests"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@babel/core": "^7.23.9",
-    "@babel/plugin-transform-object-rest-spread": "^7.23.4",
-    "ckeditor4": "^4.24.0",
-    "postcss-cli": "^11.0.0"
-  }
+    "private": true,
+    "type": "commonjs",
+    "scripts": {
+        "dev": "mix",
+        "build": "dev",
+        "development": "mix",
+        "watch": "mix watch",
+        "watch-poll": "mix watch -- --watch-options-poll=1000",
+        "hot": "mix watch --hot",
+        "prod": "npm run production",
+        "production": "mix --production"
+    },
+    "devDependencies": {
+        "@babel/preset-env": "^7.23.9",
+        "@popperjs/core": "^2.11.6",
+        "autoprefixer": "^10.4.17",
+        "axios": "^1.6.4",
+        "bootstrap": "^5.2.3",
+        "bootstrap-icons": "^1.11.3",
+        "laravel-mix": "^6.0.49",
+        "laravel-vite-plugin": "^1.0.0",
+        "less": "^4.2.0",
+        "less-loader": "^12.2.0",
+        "postcss": "^8.4.35",
+        "resolve-url-loader": "^5.0.0",
+        "sass": "^1.56.1",
+        "sass-loader": "^12.6.0"
+    },
+    "name": "oslibrary",
+    "description": "OS Library is a web application developed for Ohr Somayach/Tannenbaum College in Jerusalem, Israel. This application is designed to facilitate the management of Seforim (books) within the Yeshiva and its surroundings, providing an efficient and user-friendly platform for tracking, cataloging, and accessing books.",
+    "version": "1.0.0",
+    "main": "webpack.config.cjs",
+    "directories": {
+        "test": "tests"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@babel/core": "^7.23.9",
+        "@babel/plugin-transform-object-rest-spread": "^7.23.4",
+        "ckeditor4": "^4.24.0",
+        "postcss-cli": "^11.0.0"
+    }
 }
