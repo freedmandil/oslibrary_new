@@ -30,6 +30,7 @@ Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->na
 // Route to handle registration form submission
 Route::post('/register', [RegisterController::class, 'register'])->name('register');
 Route::resource('users', UserController::class);
-
-
+Route::middleware(['auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+});
 require __DIR__.'/auth.php';

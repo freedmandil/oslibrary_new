@@ -1,1 +1,10 @@
-.input_label{color:#ccc}
+
+
+.cm-input-label  {
+    color: #cccccc;
+}
+.cm-required-field:after {
+    content:" *";
+    color: red;
+    font-weight: 800;
+}

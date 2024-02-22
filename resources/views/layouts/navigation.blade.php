@@ -19,24 +19,37 @@
                     <a class="nav-link" href="{{ route('search') }}">Search</a>
                 </li>
 
+                <!-- Register -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('register') }}">Register</a>
+                </li>
+
                 <!-- Login Dropdown -->
                 <li class="nav-item dropdown">
+                    @php if (Auth::check()) { @endphp
+                        <li class="nav-item">
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button class="nav-link" type="submit">Logout</button>
+                            </form>
+                        </li>
+                    @php } else { @endphp
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Login
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end m-0 p-0 border-0 w-50 " aria-labelledby="navbarDropdown">
+                    <ul class="dropdown-menu dropdown-menu-end m-0 p-0 border-0 col-md-10 " aria-labelledby="navbarDropdown">
                         <li>
-                            <div class="card">
+                            <div class="card ">
                                 <div class="card-body">
                                     <form method="POST" action="{{ route('login') }}">
                                         @csrf
                                         <div class="mb-3">
-                                            <label for="email" class="form-label input_label">Email</label>
-                                            <input type="email" class="form-control" id="login_email" name="login_email" autocomplete="email" required>
+                                            <label for="login_email" class="form-label cm-input-label">Email</label>
+                                            <input type="email" class="form-control" id="login_email" name="email" autocomplete="email" required>
                                         </div>
                                         <div class="mb-3">
-                                            <label for="password" class="form-label input_label">Password</label>
-                                            <input type="password" class="form-control" id="login_password" name="login_password" autocomplete="password" required>
+                                            <label for="login_password" class="form-label cm-input-label">Password</label>
+                                            <input type="password" class="form-control" id="login_password" name="password" autocomplete="password" required>
                                         </div>
                                         <button type="submit" class="btn btn-primary">Login</button>
                                         <div class="text-sm mt-2 text-center">
@@ -47,7 +60,10 @@
                             </div>
                         </li>
                     </ul>
+                    @php } @endphp
+
                 </li>
+
             </ul>
         </div>
     </div>
