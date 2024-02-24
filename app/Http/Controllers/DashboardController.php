@@ -16,7 +16,7 @@ class DashboardController extends Controller
             case 'student':
             case 'staff': return view('dashboard.index', compact('user'));
             case 'admin': return view('dashboard.admin', compact('user'));
-            case 'super_admin': return view('dashboard.super_admin', compact('user'));
+            case 'super_admin': return view('dashboard.admin', compact('user',));
             default: return view('home', compact('user'));
         }
     }
