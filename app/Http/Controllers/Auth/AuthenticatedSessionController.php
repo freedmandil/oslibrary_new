@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -28,9 +29,13 @@ class AuthenticatedSessionController extends Controller
 
         // After successful authentication, check if the user is indeed authenticated.
         if (Auth::check()) {
+            $user = Auth::user()->load('usr_cat','sys_country','sys_state'); // Retrieve the currently authenticated user
+
             // The user is authenticated, so redirect to the intended location or a default.
             // This avoids returning a no-content response, which might be confusing in a web context.
             $request->session()->regenerate();
+            Session::put('user_role', $user->user_cat); // Assuming the user has a 'role' attribute
+            Session::put('user_permissions', $user->access_level); // Assuming permissions are retrieved somehow
             return redirect()->intended('dashboard')->with('status', 'Welcome. You have successfully logged in.');; // Adjust 'dashboard' to your default post-login location
         } else {
             // If, for any reason, Auth::check() returns false after calling authenticate(),

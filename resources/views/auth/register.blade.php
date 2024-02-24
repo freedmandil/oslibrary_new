@@ -173,7 +173,11 @@
                                 <select id="cat_id" name="cat_id" class="form-select" required>
                                     <option value="">Select User Type</option>
                                     @foreach ($categories as $category)
-                                        <option value="{{ $category->id }}" {{ old('cat_id') == $category->id ? 'selected' : '' }}>{{ $category->category_name }}</option>
+                                        @if ($loop->iteration <= 3)
+                                            <option value="{{ $category->id }}" {{ old('cat_id') == $category->id ? 'selected' : '' }}>
+                                                {{ ucwords(str_replace('_', ' ', $category->category_name)) }}
+                                            </option>
+                                        @endif
                                     @endforeach
                                 </select>
                                 <x-input-error :messages="$errors->get('cat_id')" class="mt-2" />

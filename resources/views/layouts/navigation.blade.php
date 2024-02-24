@@ -19,11 +19,6 @@
                     <a class="nav-link" href="{{ route('search') }}">Search</a>
                 </li>
 
-                <!-- Register -->
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ route('register') }}">Register</a>
-                </li>
-
                 <!-- Login Dropdown -->
                 <li class="nav-item dropdown">
                     @php if (Auth::check()) { @endphp
@@ -34,7 +29,12 @@
                             </form>
                         </li>
                     @php } else { @endphp
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <!-- Register -->
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ route('register') }}">Register</a>
+                </li>
+
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Login
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end m-0 p-0 border-0 col-md-10 " aria-labelledby="navbarDropdown">

@@ -67,15 +67,19 @@ class usrUser extends Authenticatable
 
 
     // User belongs to a usr_cats
-    public function usr_cats()
+    public function usr_cat()
     {
-        return $this->belongsTo(usr_cats::class, 'cat_id');
+        return $this->belongsTo(UsrCat::class, 'cat_id');
     }
 
     // User belongs to a sys_country
     public function sys_country()
     {
-        return $this->belongsTo(sys_countries::class, 'country_id');
+        return $this->belongsTo(SysCountry::class, 'country_id');
     }
 
+    public function sys_state()
+    {
+        return $this->belongsTo(SysState::class, 'state_id');
+    }
 }
