@@ -38,10 +38,12 @@ class BookController extends Controller
                 'lib_books.date_updated as dateUpdated',
                 'lib_publishers.name_en AS publisher_en',
                 'lib_publishers.name_he AS publisher_he',
-                'sys_languages.name AS language',
+                'sys_languages.name_lan AS language',
                 'loc_shelfnames.name AS shelfNumber',
                 'loc_locations.name_en as assignment_en',
                 'loc_locations.name_he as assignment_he',
+                'lib_authors.last_name as author_last',
+                'lib_authors.first_name as author_first',
 
             )
             ->join('loc_shelfnames', 'lib_books.shelf_number_id', '=', 'loc_shelfnames.id')
@@ -54,9 +56,8 @@ class BookController extends Controller
             ->leftJoin('loc_assignments', 'lib_books.loc_assignment_id', '=', 'loc_assignments.id')
             ->leftJoin('loc_locations', 'loc_assignments.location_id', '=', 'loc_locations.id')
             ->leftJoin('sys_colors', 'loc_assignments.color_id', '=', 'sys_colors.id')
-            ->where('loc_shelfnames.name', $shelfName)
+            ->where('loc_shelfnames.name', $shelf_name)
             ->get();
-
 
         return response()->json($books);
     }

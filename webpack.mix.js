@@ -17,6 +17,9 @@ mix.postCss('resources/css/app.css', 'public/css', [
 mix.styles([
     'resources/css/app.css',
     'resources/css/styles.css',
+    // Import ag-Grid styles
+    'node_modules/ag-grid-community/styles/ag-grid.css',
+    'node_modules/ag-grid-community/styles/ag-theme-alpine.css',
 ], 'public/css/all.css');
 
 //only load the appropriate css dynamically

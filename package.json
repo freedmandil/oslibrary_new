@@ -39,7 +39,6 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "@ag-grid-community/cli": "31.0",
         "@babel/core": "^7.23.9",
         "@babel/plugin-transform-object-rest-spread": "^7.23.4",
         "ag-grid-community": "^31.1.1",
