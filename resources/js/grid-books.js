@@ -19,7 +19,7 @@ const columnTitleMap = {
 
 // Assuming you can determine the user's language setting similarly in JavaScript
 const columnDefs = Object.keys(columnTitleMap).map(key => ({
-    field: key,
+    field: (key == 'topic' || key == 'publisher' || key == 'assignment' ) ? key+'_'+userLanguage : key,
     headerName: columnTitleMap[key][userLanguage],
     hide: key === 'id' // Assuming you want to hide the ID column
 }));
@@ -32,7 +32,7 @@ function populateGrid(data, columnDefs) {
 
     // Assuming you have initialized the grid instance
     const gridDiv = document.querySelector('#Books_Grid');
-    new Grid.Grid(gridDiv, gridOptions)
+    Grid.createGrid(gridDiv, gridOptions);
 }
 
 const apiUrl = '/api/books/shelf_name/'; // URL to Laravel API endpoint
