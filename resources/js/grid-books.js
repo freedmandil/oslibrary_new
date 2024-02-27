@@ -32,7 +32,6 @@ function populateGrid(data, columnDefs) {
 
     // Assuming you have initialized the grid instance
     const gridDiv = document.querySelector('#Books_Grid');
-    const gridApi = createGrid(...)
     new Grid.Grid(gridDiv, gridOptions)
 }
 
