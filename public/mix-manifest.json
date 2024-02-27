@@ -2,5 +2,8 @@
     "/js/app.js": "/js/app.js",
     "/js/forms.js": "/js/forms.js",
     "/css/app.css": "/css/app.css",
-    "/css/all.css": "/css/all.css"
+    "/css/all.css": "/css/all.css",
+    "/css/bootstrap.rtl.css": "/css/bootstrap.rtl.css",
+    "/css/bootstrap.css": "/css/bootstrap.css",
+    "/js/grid-books.js": "/js/grid-books.js"
 }

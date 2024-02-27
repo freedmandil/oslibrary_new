@@ -7,6 +7,12 @@
 
         <title>@yield('title')</title>
         <link href="{{ mix('/css/all.css') }}" rel="stylesheet">
+        @if (Session::get('user_language') == 'he')
+            <link href="{{ mix('/css/bootstrap.rtl.css') }}" rel="stylesheet">
+        @else
+            <link href="{{ mix('/css/bootstrap.css') }}" rel="stylesheet">
+        @endif
+        <link href="{{ url('colors.css') }}" rel="stylesheet">
 
         <!-- Fonts -->
 

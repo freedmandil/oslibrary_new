@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class SysColor extends Model
 {
+    protected $table = 'sys_colors';
+
     use HasFactory;
 }

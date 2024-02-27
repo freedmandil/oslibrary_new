@@ -6,3 +6,11 @@
     color: red;
     font-weight: 800;
 }
+
+.ltr {
+    direction: ltr !important;
+}
+
+.rtl {
+    direction: rtl !important;
+}

@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class LibAuthorbookRelationship extends Model
 {
+    protected $table = 'lib_authorbook_relationship';
+
     use HasFactory;
 }

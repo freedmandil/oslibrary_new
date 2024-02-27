@@ -17,7 +17,6 @@ return new class extends Migration
                 $table->string('abv3_alt')->after('abv3')->nullable(true);
                 $table->string('code')->after('abv3_alt')->nullable(true);
                 $table->string('slug')->after('code');
-                $table->dropTimestamps();
             });
     }
 

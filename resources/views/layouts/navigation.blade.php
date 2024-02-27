@@ -37,7 +37,7 @@
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Login
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-end m-0 p-0 border-0 col-md-10 " aria-labelledby="navbarDropdown">
+                    <ul class="dropdown-menu dropdown-menu-end m-0 p-0 border-0 col-md-2 " aria-labelledby="navbarDropdown">
                         <li>
                             <div class="card ">
                                 <div class="card-body">

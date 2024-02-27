@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class LocLocation extends Model
 {
     use HasFactory;
+    public function loc_assignments()
+    {
+        return $this->hasMany('App\Models\LocAssignment', 'location_id');
+    }
 }

@@ -183,6 +183,27 @@
                                 <x-input-error :messages="$errors->get('cat_id')" class="mt-2" />
                             </div>
                     </div>
+                <div class="row">
+                    <!-- ZIP/Post Code -->
+                    <div class="col mb-3">
+                        &nbsp;
+                    </div>
+                    <!-- User Type -->
+                    <div class="col mb-3">
+                        <x-input-label for="language_id" :value="__('Language')" class="cm-input-label" />
+                        <select id="language_id" name="language_id" class="form-select" required>
+                            <option value="">Select User Type</option>
+                            @foreach ($languages as $language)
+                                @if ($loop->iteration <= 3)
+                                    <option value="{{ $language->id }}" {{ old('language_id') == $language->id ? 'selected' : '' }}>
+                                        {{ $language->name_lan }} ({{ $language->name_en }})
+                                    </option>
+                                @endif
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('cat_id')" class="mt-2" />
+                    </div>
+                </div>
                 <div class="row pt-3s mt-3">
                     <!-- Submit Button -->
                         <div class="col-span-2 mb-3">

@@ -43,6 +43,7 @@ class usrUser extends Authenticatable
         'access_level',
         'date_created',
         'contact_status',
+        'language_id'
     ];
 
     /**
@@ -81,5 +82,10 @@ class usrUser extends Authenticatable
     public function sys_state()
     {
         return $this->belongsTo(SysState::class, 'state_id');
+    }
+
+    public function sys_language()
+    {
+        return $this->belongsTo(SysLanguage::class, 'language_id');
     }
 }

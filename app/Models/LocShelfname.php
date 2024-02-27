@@ -5,13 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LibTitle extends Model
+class LocShelfname extends Model
 {
     protected $fillable = [
-        'book_title',
-        'book_subtitle',
-        'book_sub_subtitle'
+        'name',
+        'number',
+        'prefix',
+        'suffix',
     ];
+
+    protected $table = 'loc_shelfnames';
     public $timestamps = false;
 
     use HasFactory;

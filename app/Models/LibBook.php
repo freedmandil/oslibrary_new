@@ -9,7 +9,31 @@ class LibBook extends Model
 {
     use HasFactory;
 
+    const CREATED_AT = 'date_created';
+    const UPDATED_AT = 'date_updated';
+
     protected $table = 'lib_books';
+    protected $fillable = [
+        'book_title_id',
+        'book_edition',
+        'book_notes',
+        'book_type',
+        'book_topic_id',
+        'book_category_id',
+        'subcategory_id',
+        'group_id',
+        'book_class_ref',
+        'book_class_number',
+        'book_reference_id',
+        'language_id',
+        'shelf_number_id',
+        'sefer_number',
+        'barcode',
+        'loc_assignment_id',
+        'publisher_id',
+        'date_of_publication',
+        'publication_location',
+    ];
 
     // Assuming you have timestamps
     public $timestamps = true;
@@ -19,9 +43,14 @@ class LibBook extends Model
     {
         // Assuming you have an author_id column in your books table
         // and an Author model that relates to an authors table
-        return $this->belongsTo(LibTitle::class, 'author_id');
+        return $this->belongsTo(LibTitle::class, 'book_title_id');
     }
 
+    public function loc_shelfname()
+    {
+        // Assuming Publisher model and publisher_id column in books table
+        return $this->belongsTo(LocShelfname::class, 'shelf_number_id');
+    }
     public function lib_publisher()
     {
         // Assuming Publisher model and publisher_id column in books table
@@ -55,13 +84,18 @@ class LibBook extends Model
     public function sys_language()
     {
         // Assuming Publisher model and publisher_id column in books table
-        return $this->belongsTo(SysLanguage::class, 'publisher_id');
+        return $this->belongsTo(SysLanguage::class, 'language_id');
     }
 
     public function loc_assignment()
     {
         // Assuming Publisher model and publisher_id column in books table
-        return $this->belongsTo(LocAssignment::class, 'publisher_id');
+        return $this->belongsTo(LocAssignment::class, 'loc_assignment_id');
+    }
+
+    public function lib_author()
+    {
+        return $this->belongsToMany(LibAuthor::class, 'lib_authorbook_relationship', 'book_id', 'author_id');
     }
 
 }

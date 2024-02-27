@@ -5,8 +5,9 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\BookController;
 
-
+use App\Models\SysColor;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,6 +18,14 @@ use App\Http\Controllers\Auth\RegisterController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+
+Route::get('colors.css', function () {
+    $colors = SysColor::all();
+
+    return response()->view('colors', compact('colors'))
+        ->header('Content-Type', 'text/css');
+});
 
 Route::get('/', function () {
     return view('home');
@@ -33,4 +42,6 @@ Route::resource('users', UserController::class);
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
+
+
 require __DIR__.'/auth.php';
