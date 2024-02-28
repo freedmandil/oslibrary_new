@@ -401,6 +401,9 @@ if (!function_exists('parseAuthorName')) {
         } else {
             $nameComponents = $author_details;
         }
+        foreach ($nameComponents as &$component) {
+            $component = str_toTitleCase($component);
+        }
         return $nameComponents;
     }
 }
@@ -495,6 +498,17 @@ if (!function_exists('determineLocAssignmentId')) {
             // If assignment found, return its ID, otherwise return null
             return $assignment ? $assignment->id : null;
         }
+}
+
+if (!function_exists('str_toTitleCase'))
+{
+    function str_toTitleCase($string): string
+    {
+        if ( preg_match('/^[a-zA-Z\s]*$/', stripPunctuation($bookTitle)) ) {
+            return ucwords(strtolower($string));
+        } else {
+            return $string;
+    }
 }
 
 if (!function_exists('convertVolume')) {
