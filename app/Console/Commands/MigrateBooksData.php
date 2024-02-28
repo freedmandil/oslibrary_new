@@ -148,7 +148,6 @@ class MigrateBooksData extends Command
             // If a record with the same sefer_number and shelf_number_id exists, do not insert a duplicate
             if (!$existingBook) {
                 $newBook_array = [
-                    'book_title_id' => (empty($bookTitleId)) ? null : $bookTitleId,
                     'book_edition' => $oldBook->mah,
                     'volume' => $volume,
                     'volume_name' => $volume_name,
@@ -162,11 +161,11 @@ class MigrateBooksData extends Command
                     'book_class_number' => null,
                     'book_reference_id' => $BookReference_id,
                     'language_id' => $bookLanguageId,
-                    'shelf_number_id' => (empty($bookShelfnameId)) ? '' : $bookShelfnameId,
+                    'shelf_number_id' => (empty($bookShelfnameId)) ? null : $bookShelfnameId,
                     'sefer_number' => intval($oldBook->seferno),
                     'barcode' => $Barcode,
                     'loc_assignment_id' => $locAssignmentId,
-                    'publisher_id' => (empty($bookPublisherId)) ? '' : $bookPublisherId,
+                    'publisher_id' => (empty($bookPublisherId)) ? null : $bookPublisherId,
                     'date_of_publication' => null,
                     'publication_location' => null,
                 ];

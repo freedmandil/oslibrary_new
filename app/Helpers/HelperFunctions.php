@@ -293,7 +293,7 @@ if (!function_exists('parseAuthorName')) {
                 return null; // Or return an array with all values set to null or empty, depending on your needs
             }
             $name = removeSingleLetters($name);
-            $prefixes = ['ר׳', 'רב', 'רבי', 'הגאון', 'גאון', "'ר", 'Rabbi', 'Rav', 'Rebbi', 'Rebbe', 'haRav', 'haGaon', 'haRav haGaon', "R'"];
+            $prefixes = ['ר׳', 'רב', 'רבי', 'הגאון', 'גאון', "'ר", "ר'", 'Rabbi', 'Rav', 'Rebbi', 'Rebbe', 'haRav', 'haGaon', 'haRav haGaon', "R'"];
             $suffixes = ['Shlita', 'Shlit"a', 'שליט״א', 'שליט"א', 'ז״ל', 'z"l', 'zl', 'ז"ל', 'זצ״ל', 'זצ"ל', 'זצק״ל', 'זצק"ל', 'ztz"l', 'ztzk"l'];
             $suffixes_cohen = ['haKohen', 'haKohein', 'haCohen', 'haCohein', 'הכהן', '(כהן)'];
             $suffixes_levi = ['haLevi', 'הלוי', '(לוי)'];

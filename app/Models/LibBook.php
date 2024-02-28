@@ -14,7 +14,6 @@ class LibBook extends Model
 
     protected $table = 'lib_books';
     protected $fillable = [
-        'book_title_id',
         'book_edition',
         'volume',
         'volume_name',
