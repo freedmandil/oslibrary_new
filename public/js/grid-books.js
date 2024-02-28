@@ -4,6 +4,8 @@ const columnTitleMap = {
     title: { en: "Title", he: "שם" },
     subtitle: { en: "Subtitle", he: "שם שניה" },
     author: { en: "Author", he: "מחבר" },
+    volume: { en: "Vol.", he: "חלק" },
+    volume_name: { en: "Vol. Name", he: "מסכתא" },
     shelfNumber: { en: "Shelf Number", he: "מספר תא" },
     seferNumber: { en: "Sefer Number", he: "מספר ספר" },
     barcode: { en: "Barcode", he: "ברקוד" },

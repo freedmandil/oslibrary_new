@@ -16,6 +16,8 @@ class LibBook extends Model
     protected $fillable = [
         'book_title_id',
         'book_edition',
+        'volume',
+        'volume_name',
         'book_notes',
         'book_type',
         'book_topic_id',
@@ -39,11 +41,9 @@ class LibBook extends Model
     public $timestamps = true;
 
     // Relationship methods
-    public function lib_title()
+    public function lib_titles()
     {
-        // Assuming you have an author_id column in your books table
-        // and an Author model that relates to an authors table
-        return $this->belongsTo(LibTitle::class, 'book_title_id');
+        return $this->hasMany(LibTitle::class, 'book_id');
     }
 
     public function loc_shelfname()
@@ -56,7 +56,6 @@ class LibBook extends Model
         // Assuming Publisher model and publisher_id column in books table
         return $this->belongsTo(LibPublisher::class, 'publisher_id');
     }
-
 
     public function tax_subcategory()
     {

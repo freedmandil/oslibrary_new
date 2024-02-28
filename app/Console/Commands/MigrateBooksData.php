@@ -43,14 +43,11 @@ class MigrateBooksData extends Command
 
             $bookTitle = trim($oldBook->name); // Assuming this is the title from your old book record
             $bookLanguage = detectLanguage($bookTitle);
-
-            $titleRecord = \App\Models\LibTitle::firstOrCreate([
-                'book_title' => $oldBook->name, // Searching for this title
-                'book_subtitle' => $oldBook->mascht, // And this subtitle
-            ]);
-            $bookTitleId = $titleRecord->id;
-
+            $convertVolume = convertVolume(trim($oldBook->mascht));
+            $volume = $convertVolume['volume'];
+            $volume_name = $convertVolume['volume_name'];
             $shelfComponents = parseShelfNumber($oldBook->shelfno);
+            $locAssignmentId = determineLocAssignmentId($shelfComponents['prefix'],$shelfComponents['number']);
 
 // Attempt to find an existing shelf name with the same components
             $existingShelf = \App\Models\LocShelfname::where([
@@ -64,18 +61,42 @@ class MigrateBooksData extends Command
                 $bookShelfnameId = trim($existingShelf->id);
             } else {
                 // If not found, create a new record and use its ID
-                $newShelf = \App\Models\LocShelfname::create([
-                    'name' => $oldBook->shelfno,
-                    'prefix' => $shelfComponents['prefix'],
-                    'number' => $shelfComponents['number'],
-                    'suffix' => $shelfComponents['suffix'],
-                ]);
-                $bookShelfnameId = $newShelf->id;
+//                $newShelf = \App\Models\LocShelfname::create([
+//                    'name' => $oldBook->shelfno,
+//                    'prefix' => $shelfComponents['prefix'],
+//                    'number' => $shelfComponents['number'],
+//                    'suffix' => $shelfComponents['suffix'],
+//                ]);
+//                $bookShelfnameId = $newShelf->id;
             }
+// Check if the 'mah' field is not empty in the old book
             if (!empty($oldBook->mah)) {
-                    $bookPublisherId = ($bookLanguage = 'he') ? \App\Models\LibPublisher::firstOrCreate(['name_he' => $oldBook->mah])->id : \App\Models\LibPublisher::firstOrCreate(['name_en' => $oldBook->mah])->id;
+                // Check the language of the book
+                if ($bookLanguage == 'he') {
+
+                    // If the book language is Hebrew, try to find the publisher using Hebrew name
+                    $publisher = \App\Models\LibPublisher::where('name_he', $oldBook->mah)->first();
+                } else {
+                    // If the book language is not Hebrew, try to find the publisher using English name
+                    $publisher = \App\Models\LibPublisher::where('name_en', $oldBook->mah)->first();
+                }
+
+                // If the publisher doesn't exist, create it
+                if (!$publisher) {
+                    // Create the publisher with the appropriate language attribute
+                    if ($bookLanguage == 'he') {
+                        $publisherAttributes = ['name_he' => $oldBook->mah];
+                    } else {
+                        $publisherAttributes = ['name_en' => $oldBook->mah];
+                    }
+                  //  $publisher = \App\Models\LibPublisher::create($publisherAttributes);
+                }
+
+                // Get the publisher ID
+                //$bookPublisherId = $publisher->id;
             } else {
-                $bookPublisherId = 1;
+                // If the 'mah' field is empty, set the publisher ID to null
+                $bookPublisherId = null;
             }
             // Parse and process data here...
             // For example, parsing author names and creating or finding authors in the new table
@@ -83,7 +104,7 @@ class MigrateBooksData extends Command
 
             // Parse the author's name
 
-            $authorComponents = !empty(parseAuthorName($oldBookAuthorName)) ? parseAuthorName($oldBookAuthorName) : null;
+            $authorComponents = !empty(parseAuthorName($oldBookAuthorName,$bookTitle)) ? parseAuthorName($oldBookAuthorName,$bookTitle) : null;
             $authorId = null;
 
             if (!empty($authorComponents)) {
@@ -97,8 +118,8 @@ class MigrateBooksData extends Command
                     $authorId = $existingAuthor->id;
                 } else {
                     // Author doesn't exist, create a new one
-                    $newAuthor = LibAuthor::create($authorComponents);
-                    $authorId = $newAuthor->id;
+                   // $newAuthor = LibAuthor::create($authorComponents);
+                  //  $authorId = $newAuthor->id;
                 }
             }
 
@@ -110,27 +131,27 @@ class MigrateBooksData extends Command
 
             $Barcode = create_barcode_number($oldBook->bkref, $oldBook->shelfno);
 
-            $locAssignmentId = determineLocAssignmentId($oldBook->shelfno);
             $Booknotes = $oldBook->nts;
             $BookReference_id = $oldBook->bkref;
             $BookTyoe = $oldBook->type;
             $BookTopic_id = (empty($oldBook->tpcid)) ? null : intval($oldBook->tpcid);
             $BookCatId = empty($oldBook->catid) ? null : intval($oldBook->catid);
 
-            if ($i > 127) {
-                break;
-            }
-            $existingBook = LibBook::where('sefer_number', intval($oldBook->seferno))
-                ->where('shelf_number_id', $bookShelfnameId)
-                ->first();
+
+            $existingBook = false;
+//            $existingBook = LibBook::where('sefer_number', intval($oldBook->seferno))
+//                ->where('shelf_number_id', $bookShelfnameId)
+//                ->first();
 
             // Create or find other necessary records (publishers, titles, etc.)
             // Insert new book record
             // If a record with the same sefer_number and shelf_number_id exists, do not insert a duplicate
             if (!$existingBook) {
-                $newBook = new \App\Models\LibBook([
-                    'book_title_id' => $bookTitleId,
+                $newBook_array = [
+                    'book_title_id' => (empty($bookTitleId)) ? null : $bookTitleId,
                     'book_edition' => $oldBook->mah,
+                    'volume' => $volume,
+                    'volume_name' => $volume_name,
                     'book_notes' => $Booknotes,
                     'book_type' => $BookTyoe,
                     'book_topic_id' => $BookTopic_id,
@@ -141,29 +162,63 @@ class MigrateBooksData extends Command
                     'book_class_number' => null,
                     'book_reference_id' => $BookReference_id,
                     'language_id' => $bookLanguageId,
-                    'shelf_number_id' => $bookShelfnameId,
+                    'shelf_number_id' => (empty($bookShelfnameId)) ? '' : $bookShelfnameId,
                     'sefer_number' => intval($oldBook->seferno),
                     'barcode' => $Barcode,
                     'loc_assignment_id' => $locAssignmentId,
-                    'publisher_id' => $bookPublisherId,
+                    'publisher_id' => (empty($bookPublisherId)) ? '' : $bookPublisherId,
                     'date_of_publication' => null,
                     'publication_location' => null,
-                ]);
-
-
-
-                $newBook->save();
-                $bookId = $newBook->id;
+                ];
+                $newBook = new \App\Models\LibBook($newBook_array);
+               // $newBook->save();
+                //$bookId = $newBook->id;
 
                 if ($authorId && $bookId) {
-                    LibAuthorbookRelationship::create([
-                        'book_id' => $bookId,
-                        'author_id' => $authorId
-                    ]);
+//                    LibAuthorbookRelationship::create([
+//                        'book_id' => $bookId,
+//                        'author_id' => $authorId
+//                    ]);
                 }
             }
+            $bookTitle = trim($oldBook->name); // Assuming this is the title from your old book record
+            $titleRecord = \App\Models\LibTitle::where('book_title', $bookTitle)->first();
 
+// If the title record doesn't exist, create it
+            if (!$titleRecord) {
+//                $titleRecord = \App\Models\LibTitle::create([
+//                    'book_title' => $oldBook->name,
+                //    'book_id' => $bookId
+//                ]);
+            }
+
+            $oldTitle = DB::connection('thefr622_oslibold')
+                ->table('tbl-titles')
+                ->where('tit_bkref', $BookReference_id)
+                ->first();
+
+            if ($oldTitle) {
+                // Check if the title exists in the new database
+
+                if ($bookLanguage == 'en') {
+                    // For English books, compare in lowercase
+                    $transformedBookTitle = strtolower($bookTitle);
+                    $titleRecord = \App\Models\LibTitle::whereRaw('LOWER(book_title) = ?', [$transformedBookTitle])->first();
+                } else {
+                    // For non-English books, compare as is
+                    $titleRecord = \App\Models\LibTitle::where('book_title', $bookTitle)->first();
+                }
+
+                // If the title record doesn't exist, create it
+                if (!$titleRecord) {
+//                    $titleRecord = \App\Models\LibTitle::create([
+//                        'book_title' => $oldTitle->tit_title,
+//                        'book_id' => $bookId
+//                    ]);
+                }
+            }
             // Output progress or confirmation
-            $this->info("Migrated book: {$oldBook->name}  at: $locAssignmentId on shelf: {$oldBook->shelfno}");
-        }    }
+                $this->info("Migrated book ($i) [bkref: $BookReference_id]: {$bookTitle}, | at: $locAssignmentId on shelf: {$oldBook->shelfno} $bookLanguage  vol: $volume  $volume_name");
+        }
+    }
 }

@@ -15,4 +15,7 @@ class LibAuthorbookRelationship extends Model
         'book_id',
         'author_id',
     ];
+
+    public $timestamps = false;
+
 }

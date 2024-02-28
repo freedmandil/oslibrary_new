@@ -26,6 +26,8 @@ class BookController extends Controller
                 'lib_titles.book_title as title',
                 'lib_titles.book_subtitle as subtitle',
                 'lib_books.book_edition AS edition',
+                'lib_books.volume AS volume',
+                'lib_books.volume_name AS volume_name',
                 'lib_books.book_notes AS notes',
                 'lib_books.book_type AS type',
                 'tax_topics.name_en as topic_en',
@@ -49,7 +51,7 @@ class BookController extends Controller
 
             )
             ->join('loc_shelfnames', 'lib_books.shelf_number_id', '=', 'loc_shelfnames.id')
-            ->leftJoin('lib_titles', 'lib_books.book_title_id', '=', 'lib_titles.id')
+            ->leftJoin('lib_titles', 'lib_books.book_id', '=', 'lib_titles.book_id')
             ->leftJoin('lib_publishers', 'lib_books.publisher_id', '=', 'lib_publishers.id')
             ->leftJoin('sys_languages', 'lib_books.language_id', '=', 'sys_languages.id')
             ->leftJoin('tax_topics', 'lib_books.book_topic_id', '=', 'tax_topics.id')
