@@ -57,10 +57,16 @@
 
 
                 <!-- Books Table -->
-                <script>const userLanguage = '{{$user->sys_language->lan_code}}';</script>
+                <script>const userLanguage = '{{ $user->sys_language->lan_code }}',
+                              userAccessLevel = '{{ $user->access_level }}';
+                </script>
                 <script src="{{ mix('/js/grid-books.js') }}"></script>
-                <div id="Grid_Container">
-                    <div id="Books_Grid" class="ag-theme-alpine" style="width: 100%; height: 100%"></div>
+                <div id="Grid_Container" class="container-fluid m-0 p-0 vh-100 w-100">
+                    @if(old('shelf_number'))
+                        <h2>Shelf Number: {{ old('shelf_number') }}</h2>
+                    @endif
+
+                    <div id="Books_Grid" class="ag-theme-alpine w-100 h-100"></div>
                 </div>
 
             </main>

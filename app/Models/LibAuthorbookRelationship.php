@@ -10,4 +10,9 @@ class LibAuthorbookRelationship extends Model
     protected $table = 'lib_authorbook_relationship';
 
     use HasFactory;
+
+    protected $fillable = [
+        'book_id',
+        'author_id',
+    ];
 }

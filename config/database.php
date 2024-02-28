@@ -63,7 +63,7 @@ return [
             ]) : [],
         ],
 
-        'thefr622_oslibold2' => [
+        'thefr622_oslibold' => [
             'driver' => 'mysql',
             'host' => env('DB_OLD_HOST', '127.0.0.1'),
             'port' => env('DB_OLD_PORT', '3306'),

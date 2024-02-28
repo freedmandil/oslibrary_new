@@ -7,10 +7,9 @@
 
         <title>@yield('title')</title>
         <link href="{{ mix('/css/all.css') }}" rel="stylesheet">
-        @if (Session::get('user_language') == 'he')
+        <link href="{{ mix('/css/bootstrap.css') }}" rel="stylesheet">
+    @if (Session::get('user_language') == 'he')
             <link href="{{ mix('/css/bootstrap.rtl.css') }}" rel="stylesheet">
-        @else
-            <link href="{{ mix('/css/bootstrap.css') }}" rel="stylesheet">
         @endif
         <link href="{{ url('colors.css') }}" rel="stylesheet">
 
@@ -18,10 +17,15 @@
 
         <!-- Scripts -->
         <script src="//unpkg.com/alpinejs" defer></script>
+        <script src="{{ mix('/js/utils.js') }}"></script>
         <script src="{{ mix('/js/app.js') }}"></script>
+
 
     </head>
     <body>
+    <div class="spinner-overlay hide">
+        <div class="spinner"></div>
+    </div>
         <div>
             @include('layouts.navigation')
             <!-- Page Heading -->

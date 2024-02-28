@@ -24,6 +24,7 @@ class BookController extends Controller
             $books = LibBook::select(
                 'lib_books.id',
                 'lib_titles.book_title as title',
+                'lib_titles.book_subtitle as subtitle',
                 'lib_books.book_edition AS edition',
                 'lib_books.book_notes AS notes',
                 'lib_books.book_type AS type',
@@ -44,6 +45,7 @@ class BookController extends Controller
                 'loc_locations.name_he as assignment_he',
                 'lib_authors.last_name as author_last',
                 'lib_authors.first_name as author_first',
+                'sys_colors.color_name as color_name'
 
             )
             ->join('loc_shelfnames', 'lib_books.shelf_number_id', '=', 'loc_shelfnames.id')

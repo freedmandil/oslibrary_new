@@ -1,30 +1,30 @@
 
 const columnTitleMap = {
-    id: { en: "ID", he: "" }, // Assuming you're not displaying the ID, hence empty string for Hebrew
+    id: { en: "ID", he: "" },
     title: { en: "Title", he: "שם" },
+    subtitle: { en: "Subtitle", he: "שם שניה" },
     author: { en: "Author", he: "מחבר" },
     shelfNumber: { en: "Shelf Number", he: "מספר תא" },
     seferNumber: { en: "Sefer Number", he: "מספר ספר" },
+    barcode: { en: "Barcode", he: "ברקוד" },
     edition: { en: "Edition", he: "מדורה" },
-    publisher: { en: "Publisher", he: "מוצי לאור" },
-    type: { en: "Type", he: "סוג" },
     topic: { en: "Topic", he: "נושא" },
-    classRef: { en: "Class Ref", he: "אות נושא" },
-    classNumber: { en: "Class Number", he: "מספר נושא" },
-    referenceId: { en: "Reference ID", he: "מספר כללי" },
     language: { en: "Language", he: "שפה" },
-    barcode: { en: "Barcode", he: "ברכוד" },
     assignment: { en: "Assignment", he: "מקום" },
     dateUpdated: { en: "Date Updated", he: "תאריך שינוי" }
 };
 
-const columnDefs = Object.keys(columnTitleMap).map(key => {
+var columnDefs = Object.keys(columnTitleMap).map(key => {
     let field = (key === 'topic' || key === 'publisher' || key === 'assignment') ? key + '_' + userLanguage : key;
     return {
         field: field,
         headerName: columnTitleMap[key][userLanguage],
-        hide: key === 'id' // Assuming you want to hide the ID column
+        hide: key === 'id', // Assuming you want to hide the ID column
+        filter: 'agSetColumnFilter'
     };
+});
+columnDefs.push({
+    action: "",
 });
 
 function removeGrid() {
@@ -66,14 +66,62 @@ function removeGrid() {
 // Append the new div to the Grid_Container
     gridContainer.appendChild(newDiv);
 }
+
+function viewRecord(id) {
+    // Logic to view the record
+    console.log('Viewing record', id);
+}
+
+function editRecord(id) {
+    // Logic to edit the record
+    console.log('Editing record', id);
+}
+
+function deleteRecord(id) {
+    // Logic to delete the record
+    console.log('Deleting record', id);
+}
+
+function addActionsColumn(columnDefs, userAccessLevel) {
+    const actionsColumn = {
+        field: "action",
+        headerName: "Actions",
+        cellRenderer: function(params) {
+            let buttons = '<button onclick="viewRecord(' + params.data.id + ')" class="btn btn-primary btn-sm">View</button>';
+
+            if (userAccessLevel >= 5) {
+                buttons += '&nbsp;&nbsp;<button onclick="editRecord(' + params.data.id + ')" class="btn btn-success btn-sm">Edit</button>';
+            }
+
+            if (userAccessLevel >= 7) {
+                buttons += '&nbsp;&nbsp;<button onclick="deleteRecord(' + params.data.id + ')" class="btn btn-danger btn-sm">Delete</button>';
+            }
+
+            return buttons;
+        },
+        // adjust this as needed (e.g., set cell style or width)
+    };
+
+    columnDefs.push(actionsColumn);
+    return columnDefs;
+}
 function populateGrid(data, columnDefs) {
     var enable_rtl = (userLanguage == 'he');
-    // Assuming you have initialized the grid instance
+
     const gridOptions = {
         columnDefs: columnDefs,
         rowData: data,
         enableRtl: enable_rtl,
-
+        autoSizeStrategy: {
+            type: 'fitGridWidth',
+            defaultMinWidth: 100,
+            columnLimits: [
+                {
+                    colId: 'action',
+                    minWidth: 300,
+                },
+            ],
+        },
     };
     var gridDiv = document.querySelector('#Books_Grid');
     Grid.createGrid(gridDiv, gridOptions);
@@ -92,7 +140,7 @@ $('.shelf_number').on('change', function() {
 
     // Construct the URL based on the selected value
      url = apiUrl + selectedValue;
-
+    Utils.showSpinner();
     // Update the href attribute of the link to the constructed URL
     fetch(url)
         .then(response => response.json())
@@ -106,16 +154,25 @@ $('.shelf_number').on('change', function() {
             });
 
             // Now 'data' contains the 'author' field with concatenated values
-            const columnDefs = Object.keys(columnTitleMap).map(key => {
+            var columnDefs = Object.keys(columnTitleMap).map(key => {
                 let field = (key === 'topic' || key === 'publisher' || key === 'assignment') ? key + '_' + userLanguage : key;
+
                 return {
                     field: field,
                     headerName: columnTitleMap[key][userLanguage],
-                    hide: key === 'id'
+                    hide: key === 'id',
+                    // Conditionally add the cellClass property for the 'assignment' column
+                    cellClass: (key === 'assignment') ? function(params) {
+                        if (params.data.color_name) {
+                            // Prefix 'sys_' to the color_name and return it as the class name
+                            return 'sys_' + params.data.color_name;
+                        }
+                    } : null
                 };
             });
-
+            columnDefs = addActionsColumn(columnDefs, userAccessLevel);
             // Populate the grid with modified data and column definitions
+            Utils.hideSpinner();
             populateGrid(data, columnDefs);
         })
         .catch(error => {

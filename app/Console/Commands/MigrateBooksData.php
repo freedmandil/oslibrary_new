@@ -4,6 +4,10 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use DB; // Assuming use of Laravel's database facade
+use Illuminate\Validation\Rule;
+use App\Models\LibBook;
+use App\Models\LibAuthor;
+use App\Models\LibAuthorbookRelationship;
 
 class MigrateBooksData extends Command
 {
@@ -32,7 +36,7 @@ class MigrateBooksData extends Command
      */
     public function handle()
     {
-        $oldBooks = DB::connection('thefr622_oslibold2')->table('tbl-oldbks')->get();
+        $oldBooks = DB::connection('thefr622_oslibold')->table('tbl-oldbks')->get();
         $i = 0;
         foreach ($oldBooks as $oldBook) {
             $i++;
@@ -80,19 +84,22 @@ class MigrateBooksData extends Command
             // Parse the author's name
 
             $authorComponents = !empty(parseAuthorName($oldBookAuthorName)) ? parseAuthorName($oldBookAuthorName) : null;
+            $authorId = null;
+
             if (!empty($authorComponents)) {
+                // Attempt to find the author
+                $existingAuthor = LibAuthor::where('first_name', $authorComponents['first_name'])
+                    ->where('last_name', $authorComponents['last_name'])
+                    ->first();
 
-                $author = \App\Models\LibAuthor::firstOrCreate(
-                    [
-                        'last_name' => $authorComponents['last_name'],
-                        'first_name' => $authorComponents['first_name'],
-                    ],
-                    $authorComponents
-                );
-
-                $authorId = $author->id;
-            } else {
-                $authorId = null;
+                if ($existingAuthor) {
+                    // Author found, use existing author
+                    $authorId = $existingAuthor->id;
+                } else {
+                    // Author doesn't exist, create a new one
+                    $newAuthor = LibAuthor::create($authorComponents);
+                    $authorId = $newAuthor->id;
+                }
             }
 
             switch ($bookLanguage) {
@@ -101,47 +108,62 @@ class MigrateBooksData extends Command
                 case 'he': $bookLanguageId = 59;
             }
 
-            $Barcode = create_barcode_number($oldBook->seferno, $oldBook->shelfno);
+            $Barcode = create_barcode_number($oldBook->bkref, $oldBook->shelfno);
 
             $locAssignmentId = determineLocAssignmentId($oldBook->shelfno);
             $Booknotes = $oldBook->nts;
             $BookReference_id = $oldBook->bkref;
             $BookTyoe = $oldBook->type;
-            $BookTopic_id = $oldBook->tpcid;
+            $BookTopic_id = (empty($oldBook->tpcid)) ? null : intval($oldBook->tpcid);
             $BookCatId = empty($oldBook->catid) ? null : intval($oldBook->catid);
+
+            if ($i > 127) {
+                break;
+            }
+            $existingBook = LibBook::where('sefer_number', intval($oldBook->seferno))
+                ->where('shelf_number_id', $bookShelfnameId)
+                ->first();
 
             // Create or find other necessary records (publishers, titles, etc.)
             // Insert new book record
-            $newBook = new \App\Models\LibBook([
-                'book_title_id' => $bookTitleId,
-                'book_edition' => $oldBook->mah,
-                'book_notes' => $Booknotes,
-                'book_type' => $BookTyoe,
-                'book_topic_id' => $BookTopic_id,
-                'book_category_id' => $BookCatId,
-                'subcategory_id' => null,
-                'group_id' => null,
-                'book_class_ref' => null,
-                'book_class_number' => null,
-                'book_reference_id' => $BookReference_id,
-                'language_id' => $bookLanguageId,
-                'shelf_number_id' => $bookShelfnameId,
-                'sefer_number' => intval($oldBook->seferno),
-                'barcode' => $Barcode,
-                'loc_assignment_id' => $locAssignmentId,
-                'publisher_id' => $bookPublisherId,
-                'date_of_publication' => null,
-                'publication_location' => null,
-            ]);
-            $this->info(var_export($oldBook,true));
-            $this->info(var_export($newBook,true));
+            // If a record with the same sefer_number and shelf_number_id exists, do not insert a duplicate
+            if (!$existingBook) {
+                $newBook = new \App\Models\LibBook([
+                    'book_title_id' => $bookTitleId,
+                    'book_edition' => $oldBook->mah,
+                    'book_notes' => $Booknotes,
+                    'book_type' => $BookTyoe,
+                    'book_topic_id' => $BookTopic_id,
+                    'book_category_id' => $BookCatId,
+                    'subcategory_id' => null,
+                    'group_id' => null,
+                    'book_class_ref' => null,
+                    'book_class_number' => null,
+                    'book_reference_id' => $BookReference_id,
+                    'language_id' => $bookLanguageId,
+                    'shelf_number_id' => $bookShelfnameId,
+                    'sefer_number' => intval($oldBook->seferno),
+                    'barcode' => $Barcode,
+                    'loc_assignment_id' => $locAssignmentId,
+                    'publisher_id' => $bookPublisherId,
+                    'date_of_publication' => null,
+                    'publication_location' => null,
+                ]);
 
 
-            $newBook->save();
-            if ($i = 1) {
-                break;
+
+                $newBook->save();
+                $bookId = $newBook->id;
+
+                if ($authorId && $bookId) {
+                    LibAuthorbookRelationship::create([
+                        'book_id' => $bookId,
+                        'author_id' => $authorId
+                    ]);
+                }
             }
+
             // Output progress or confirmation
-            $this->info("Migrated book: {$oldBook->name}");
+            $this->info("Migrated book: {$oldBook->name}  at: $locAssignmentId on shelf: {$oldBook->shelfno}");
         }    }
 }

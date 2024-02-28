@@ -1,9 +1,12 @@
 {
     "/js/app.js": "/js/app.js",
+    "/js/utils.js": "/js/utils.js",
     "/js/forms.js": "/js/forms.js",
     "/css/app.css": "/css/app.css",
+    "/css/bootstrap.css": "/css/bootstrap.css",
+    "/css/bootstrap-utilities.css": "/css/bootstrap-utilities.css",
+    "/css/bootstrap-grid.css": "/css/bootstrap-grid.css",
     "/css/all.css": "/css/all.css",
     "/css/bootstrap.rtl.css": "/css/bootstrap.rtl.css",
-    "/css/bootstrap.css": "/css/bootstrap.css",
     "/js/grid-books.js": "/js/grid-books.js"
 }
