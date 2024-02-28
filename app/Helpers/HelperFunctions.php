@@ -287,13 +287,13 @@ if (!function_exists('parseTitleAndUpdateAuthor')) {
 if (!function_exists('parseAuthorName')) {
     function parseAuthorName($name, $book_title): ?array
     {
-        $author_details = parseTitleAndUpdateAuthor($book_title);
+        $author_details = parseTitleAndUpdateAuthor($book_title) ? parseTitleAndUpdateAuthor($book_title) : parseTitleAndUpdateAuthor($name);
         if (empty($author_details)) {
             if (empty(trim($name))) {
                 return null; // Or return an array with all values set to null or empty, depending on your needs
             }
             $name = removeSingleLetters($name);
-            $prefixes = ['ר׳', 'רב', 'רבי', 'הגאון', 'גאון', "'ר", "ר'", 'Rabbi', 'Rav', 'Rebbi', 'Rebbe', 'haRav', 'haGaon', 'haRav haGaon', "R'"];
+            $prefixes = ['ר ', 'ר׳', 'רב', 'רבי', 'הגאון', 'גאון', "'ר", "ר'", 'Rabbi', 'Rav', 'Rebbi', 'Rebbe', 'haRav', 'haGaon', 'haRav haGaon', "R'"];
             $suffixes = ['Shlita', 'Shlit"a', 'שליט״א', 'שליט"א', 'ז״ל', 'z"l', 'zl', 'ז"ל', 'זצ״ל', 'זצ"ל', 'זצק״ל', 'זצק"ל', 'ztz"l', 'ztzk"l'];
             $suffixes_cohen = ['haKohen', 'haKohein', 'haCohen', 'haCohein', 'הכהן', '(כהן)'];
             $suffixes_levi = ['haLevi', 'הלוי', '(לוי)'];
@@ -313,7 +313,7 @@ if (!function_exists('parseAuthorName')) {
 
                 // Check for and remove prefix
                 foreach ($prefixes as $prefix) {
-                    $EnglishChars = preg_match('/[^a-zA-Z]/', $name);
+                    $EnglishChars = preg_match('/[^a-zA-Z]/', stripPunctuation($name));
                     if ($EnglishChars && strpos(strtolower($name), strtolower($prefix)) !== false) {
                         $nameComponents['prefix'] = $prefix;
                         $name = trim(str_ireplace($prefix, '', $name));
@@ -500,14 +500,14 @@ if (!function_exists('determineLocAssignmentId')) {
         }
 }
 
-if (!function_exists('str_toTitleCase'))
-{
+if (!function_exists('str_toTitleCase')) {
     function str_toTitleCase($string): string
     {
-        if ( preg_match('/^[a-zA-Z\s]*$/', stripPunctuation($bookTitle)) ) {
+        if (preg_match('/^[a-zA-Z\s]*$/', stripPunctuation($string))) {
             return ucwords(strtolower($string));
         } else {
             return $string;
+        }
     }
 }
 
@@ -545,7 +545,7 @@ if (!function_exists('convertVolume')) {
         $volume_name = trim($volume_name);
 
         //no need to have both the volume and volume_name the same
-        if ($volume === $volume_name) {
+        if ($volume == $volume_name) {
             $volume_name = null;
         }
 

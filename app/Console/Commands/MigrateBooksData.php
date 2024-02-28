@@ -105,7 +105,7 @@ class MigrateBooksData extends Command
 
             $authorComponents = !empty(parseAuthorName($oldBookAuthorName,$bookTitle)) ? parseAuthorName($oldBookAuthorName,$bookTitle) : null;
             $authorId = null;
-
+            $authortext = null;
             if (!empty($authorComponents)) {
                 // Attempt to find the author
                 $existingAuthor = LibAuthor::where('first_name', $authorComponents['first_name'])
@@ -120,8 +120,8 @@ class MigrateBooksData extends Command
                    // $newAuthor = LibAuthor::create($authorComponents);
                   //  $authorId = $newAuthor->id;
                 }
+                $authortext = $authorComponents['first_name']." ".$authorComponents['last_name'];
             }
-
             switch ($bookLanguage) {
                 case 'en': $bookLanguageId = 41;
                 default:
@@ -218,7 +218,9 @@ class MigrateBooksData extends Command
                 }
             }
             // Output progress or confirmation
-                $this->info("Migrated book ($i) [bkref: $BookReference_id]: {$bookTitle}, | at: $locAssignmentId on shelf: {$oldBook->shelfno} $bookLanguage  vol: $volume  $volume_name");
+            if ($authortext) {
+                $this->info("Migrated book ($i) [bkref: $BookReference_id]: {$bookTitle}, | at: $locAssignmentId on shelf: {$oldBook->shelfno} $bookLanguage  vol: $volume  $volume_name author: " . $authortext);
+            }
         }
     }
 }
