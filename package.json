@@ -42,8 +42,13 @@
         "@babel/core": "^7.23.9",
         "@babel/plugin-transform-object-rest-spread": "^7.23.4",
         "ag-grid-community": "^31.1.1",
+        "chokidar": "^3.6.0",
         "ckeditor4": "^4.24.0",
+        "fomantic-ui": "^2.9.3",
+        "fsevents": "^2.3.3",
         "jquery": "^3.7.1",
-        "postcss-cli": "^11.0.0"
+        "postcss-cli": "^11.0.0",
+        "source-map-resolve": "^0.6.0",
+        "source-map-url": "^0.4.1"
     }
 }

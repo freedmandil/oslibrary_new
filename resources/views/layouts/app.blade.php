@@ -19,6 +19,7 @@
         <script src="//unpkg.com/alpinejs" defer></script>
         <script src="{{ mix('/js/utils.js') }}"></script>
         <script src="{{ mix('/js/app.js') }}"></script>
+        <script src="{{ mix('/js/semantic.js') }}"></script>
 
 
     </head>
@@ -87,4 +88,7 @@
 </footer>
         </div>
 </body>
+<script>
+
+</script>
 </html>

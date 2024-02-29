@@ -16,5 +16,5 @@ function addRequiredFieldClass() {
 
 document.addEventListener("DOMContentLoaded", function () {
     addRequiredFieldClass();
-});
 
+});

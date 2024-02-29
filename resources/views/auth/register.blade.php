@@ -101,22 +101,10 @@
                         <div class="col mb-3">
                             <!-- Country -->
                                 <x-input-label for="country_id" :value="__('Country')" class="cm-input-label" />
-                                <select id="country_id" name="country_id" class="form-control select" required>
+                                <select id="country_id" name="country_id" className="ui search selection dropdown" class="search selection w-100" required>
                                     <option value="">Select Country</option>
-                                    {{-- Assuming you have a countries variable passed to your view --}}
-                                    @foreach (['Israel', 'United States of America', 'Canada', 'United Kingdom', 'Australia', 'South Africa', 'France', 'Brazil', 'Chile'] as $preferredCountry)
-                                        @php
-                                            $country = $countries->where('name_en', $preferredCountry)->first();
-                                        @endphp
-                                        @if ($country)
-                                            <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name_en }}</option>
-                                        @endif
-                                    @endforeach
-                                    <option disabled>───────────</option> <!-- This line acts as a separator -->
                                     @foreach ($countries as $country)
-                                        @if (!in_array($country->name_en, ['Israel', 'United States', 'Canada', 'United Kingdom', 'Australia', 'South Africa', 'France', 'Brazil', 'Chile']))
                                             <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name_en }}</option>
-                                        @endif
                                     @endforeach
                                 </select>
                                 <x-input-error :messages="$errors->get('country_id')" class="mt-2" />
@@ -125,40 +113,13 @@
                             <!-- State -->
                             <div class="col mb-3">
                                 <x-input-label for="state_id" :value="__('State/Province')" class="cm-input-label"  />
-                                <select id="state_id" name="state_id" class="form-control select">
+                                <select id="state_id" name="state_id" className="ui dropdown" class="hide search selection dropdown w-100 ">
                                     <option value="">Select State/Province</option>
                                     {{-- The following options will be populated dynamically using JavaScript --}}
-                                    @foreach ($states as $state)
-                                        <option value="{{ $state->id }}" data-country="{{ $state->country_id }}">{{ $state->name_en }}</option>
-                                    @endforeach
                                 </select>
                                 <x-input-error :messages="$errors->get('state_id')" class="mt-2" />
                             </div>
                         </div>
-                            <script>
-                                // Get references to the country select element and state select element
-                                const countrySelect = document.getElementById('country_id');
-                                const stateSelect = document.getElementById('state_id');
-                                // Hide all states initially
-                                stateSelect.querySelectorAll('option').forEach(option => {
-                                    option.style.display = 'none';
-                                });
-
-                                // Add event listener to country select element to dynamically update states when the country selection changes
-                                countrySelect.addEventListener('change', function () {
-                                    const selectedCountryId = this.value;
-                                    // Show states for the selected country and hide others
-                                    stateSelect.querySelectorAll('option').forEach(option => {
-                                        if (option.dataset.country === selectedCountryId || option.value === '') {
-                                            option.style.display = 'block';
-                                        } else {
-                                            option.style.display = 'none';
-                                        }
-                                    });
-                                    // Reset the state select to the default option
-                                    stateSelect.value = '';
-                                });
-                            </script>
 
                         <div class="row">
                             <!-- ZIP/Post Code -->
@@ -170,7 +131,7 @@
                         <!-- User Type -->
                             <div class="col mb-3">
                                 <x-input-label for="cat_id" :value="__('Category')" class="cm-input-label" />
-                                <select id="cat_id" name="cat_id" class="form-select" required>
+                                <select id="cat_id" name="cat_id" class="ui search selection dropdown w-100" required>
                                     <option value="">Select User Type</option>
                                     @foreach ($categories as $category)
                                         @if ($loop->iteration <= 3)
@@ -191,14 +152,12 @@
                     <!-- User Type -->
                     <div class="col mb-3">
                         <x-input-label for="language_id" :value="__('Language')" class="cm-input-label" />
-                        <select id="language_id" name="language_id" class="form-select" required>
-                            <option value="">Select User Type</option>
+                        <select id="language_id" name="language_id" class="ui search selection dropdown w-100" required>
+                            <option value="">Select User Language</option>
                             @foreach ($languages as $language)
-                                @if ($loop->iteration <= 3)
                                     <option value="{{ $language->id }}" {{ old('language_id') == $language->id ? 'selected' : '' }}>
                                         {{ $language->name_lan }} ({{ $language->name_en }})
                                     </option>
-                                @endif
                             @endforeach
                         </select>
                         <x-input-error :messages="$errors->get('cat_id')" class="mt-2" />
@@ -217,5 +176,53 @@
             </div>
         </div>
     </div>
+
     <script src="{{ mix('/js/forms.js') }}"></script>
+    <script>
+        $('.dropdown').dropdown({ fullTextSearch: 'exact', selectOnBlur: false, forceSelection: false, showOnFocus: false, sortSelect: true });
+
+        // document.addEventListener('DOMContentLoaded', function() {
+        $('#country_id').dropdown({
+            onChange: function(value, text, $selectedItem) {
+                const countrySelect = $('#country_id');
+                const stateSelect = $('#state_id');
+                // Clear existing options in the state dropdown
+                $('#state_id').children().remove();
+                $('#state_id').addClass('hide');
+                $('#state_id').removeClass('ui dropdown search selection');
+                $('#state_id').removeAttr('class');
+
+                // Show spinner or loading indicator
+                Utils.showSpinner(); // Ensure this is a function call
+
+                // Fetch states for the selected country using AJAX
+                $.ajax({
+                    url: '/api/system/getStatesbyCountry/' + value, // 'value' is the selected country_id from the dropdown
+                    success: function(response) {
+                        if (response.length > 0) {
+                            $('#state_id').removeClass('hide');
+                            $('.dropdown').removeClass('hide');
+
+                            // Populate the state dropdown with the fetched states
+                            response.forEach(function (state) {
+                                $('#state_id').append($('<option></option>').attr('value', state.id).text(state.name_en+' ('+state.short_en+')'));
+                            });
+                            // Refresh the state dropdown to reflect the changes
+                            stateSelect.addClass('ui dropdown search selection');
+                            stateSelect.dropdown({action: 'activate'});
+                        }
+                        $('#state_id').addClass('hide');
+                        // Hide spinner or loading indicator
+                        Utils.hideSpinner(); // Ensure this is a function call
+                    },
+                    error: function(xhr, status, error) {
+                        // Hide spinner or loading indicator on error
+                        Utils.hideSpinner(); // Ensure this is a function call
+                    }
+                });
+            }
+            });
+        // });
+
+    </script>
 </x-guest-layout>

@@ -34,7 +34,7 @@ class BookController extends Controller
                 'tax_topics.name_he as topic_he',
                 'lib_books.book_class_ref AS classRef',
                 'lib_books.book_class_number AS classNumber',
-                'lib_books.book_reference_id AS referenceId',
+                'lib_books.book_reference_id AS BookRef',
                 'lib_books.sefer_number as seferNumber',
                 'lib_books.barcode as barcode',
                 'lib_books.loc_assignment_id AS assignmentId',
@@ -46,12 +46,15 @@ class BookController extends Controller
                 'loc_locations.name_en as assignment_en',
                 'loc_locations.name_he as assignment_he',
                 'lib_authors.last_name as author_last',
+                'lib_authors.middle_name as author_middle',
                 'lib_authors.first_name as author_first',
+                'lib_authors.acronym as author_acronym',
+
                 'sys_colors.color_name as color_name'
 
             )
             ->join('loc_shelfnames', 'lib_books.shelf_number_id', '=', 'loc_shelfnames.id')
-            ->leftJoin('lib_titles', 'lib_books.book_id', '=', 'lib_titles.book_id')
+            ->leftJoin('lib_titles', 'lib_books.id', '=', 'lib_titles.book_id')
             ->leftJoin('lib_publishers', 'lib_books.publisher_id', '=', 'lib_publishers.id')
             ->leftJoin('sys_languages', 'lib_books.language_id', '=', 'sys_languages.id')
             ->leftJoin('tax_topics', 'lib_books.book_topic_id', '=', 'tax_topics.id')

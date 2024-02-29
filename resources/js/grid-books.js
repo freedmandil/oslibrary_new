@@ -8,6 +8,7 @@ const columnTitleMap = {
     volume_name: { en: "Vol. Name", he: "מסכתא" },
     shelfNumber: { en: "Shelf Number", he: "מספר תא" },
     seferNumber: { en: "Sefer Number", he: "מספר ספר" },
+    BookRef: { en: "Book Reference", he: "מספר יסודי" },
     barcode: { en: "Barcode", he: "ברקוד" },
     edition: { en: "Edition", he: "מדורה" },
     topic: { en: "Topic", he: "נושא" },
@@ -151,8 +152,10 @@ $('.shelf_number').on('change', function() {
             data.forEach(item => {
                 // Concatenate 'author_first' and 'author_last' and assign it to 'author' field
                 var author_first = (item.author_first) ? item.author_first : '',
+                    author_middle = (item.author_middle) ? item.author_middle : '';
                     author_last = (item.author_last) ? item.author_last : '';
-                item.author = author_first + ' ' + author_last;
+                item.author = author_first + ' ' + author_middle + ' ' + author_last;
+                item.author = item.author ? item.author : item.author_acronym;
             });
 
             // Now 'data' contains the 'author' field with concatenated values
@@ -181,3 +184,4 @@ $('.shelf_number').on('change', function() {
             console.error('Error fetching data:', error);
         });
 });
+

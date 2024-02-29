@@ -315,11 +315,11 @@ if (!function_exists('parseAuthorName')) {
                 foreach ($prefixes as $prefix) {
                     $EnglishChars = preg_match('/[^a-zA-Z]/', stripPunctuation($name));
                     if ($EnglishChars && strpos(strtolower($name), strtolower($prefix)) !== false) {
-                        $nameComponents['prefix'] = $prefix;
+                        $nameComponents['prefix'] = "Rav";
                         $name = trim(str_ireplace($prefix, '', $name));
                         break;
                     } elseif (!$EnglishChars && strpos($name, $prefix) !== false) {
-                        $nameComponents['prefix'] = $prefix;
+                        $nameComponents['prefix'] = 'רב';
                         $name = trim(str_replace($prefix, '', $name));
                         break;
                     }

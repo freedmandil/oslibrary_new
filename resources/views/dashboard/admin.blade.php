@@ -45,7 +45,7 @@
                             <input type="text" class="form-control shelf_number" id="shelf_number_text" name="shelf_number_text" placeholder="Enter Shelf Number">
                         </div>
                         <div class="col">
-                            <select class="form-control shelf_number" id="shelf_number_dropdown" name="shelf_number">
+                            <select class="form-control shelf_number ui search selection dropdown" id="shelf_number_dropdown" name="shelf_number">
                                 <option value="">Select Shelf Number</option>
                                 @foreach($shelfnumbers as $id => $name)
                                     <option value="{{ $name }}">{{ $name }}</option>

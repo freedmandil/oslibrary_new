@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\UsrUser;
 use App\Models\SysCountry;
 use App\Models\SysState;
+use App\Models\SysLanguage;
 use App\Models\UsrCat;
 class RegisterController extends Controller
 {
@@ -47,9 +48,9 @@ class RegisterController extends Controller
         $countries = SysCountry::all(); // Fetch all countries
         $categories = UsrCat::all(); // Fetch all categories
         $states = SysState::all(); // Fetch all states
-        $languages = SysLanguage::all(); // Fetch all states
+        $languages = SysLanguage::all(); // Fetch all languages
 
         // Pass the countries and categories to your view
-        return view('auth.register', compact('countries', 'categories', 'states', 'page_title'));
+        return view('auth.register', compact('countries', 'categories', 'states', 'page_title', 'languages'));
     }
 }

@@ -179,8 +179,7 @@ class MigrateBooksData extends Command
                 }
             }
             $bookTitle = trim($oldBook->name); // Assuming this is the title from your old book record
-            $titleRecord = \App\Models\LibTitle::where('book_title', $bookTitle)->first();
-
+            $titleRecord = \App\Models\LibTitle::where('book_title', $bookTitle)->where('book_id', $bookId)->first();
 // If the title record doesn't exist, create it
             if (!$titleRecord) {
                 $titleRecord = \App\Models\LibTitle::create([
@@ -205,8 +204,6 @@ class MigrateBooksData extends Command
                     // For non-English books, compare as is
                     $titleRecord = \App\Models\LibTitle::where('book_title', $bookTitle)->first();
                 }
-
-
 
                 // If the title record doesn't exist, create it
                 if (!$titleRecord) {
