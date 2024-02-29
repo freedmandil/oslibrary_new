@@ -42,6 +42,8 @@ class RegisteredUserController extends Controller
             'cat_id' => ['required', 'integer', 'exists:usr_cats,id'],
             'access_level' => ['nullable', 'integer'],
             'contact_status' => ['nullable', 'string', 'max:255'],
+            'language_id' => ['required', 'integer','exists:sys_languages,id'],
+
         ]);
     }
     /**
@@ -77,6 +79,8 @@ class RegisteredUserController extends Controller
             'cat_id' => $request->cat_id,
             'access_level' => 0,
             'contact_status' => $request->contact_status,
+            'language_id' => $request->language_id,
+
             // 'remember_token' will be generated automatically if you're using Laravel's Auth system
         ]);
 

@@ -1,6 +1,6 @@
 function addRequiredFieldClass() {
     // Get all input and select elements with the required attribute
-    const requiredFields = document.querySelectorAll('input[required], select[required]');
+    const requiredFields = document.querySelectorAll('input[required], select[required], label[required]');
 
     // Iterate over each required field
     requiredFields.forEach(function (field) {
@@ -16,5 +16,4 @@ function addRequiredFieldClass() {
 
 document.addEventListener("DOMContentLoaded", function () {
     addRequiredFieldClass();
-
 });

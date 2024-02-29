@@ -1,4 +1,5 @@
 <x-guest-layout>
+    @include('partials.alert');
     <div class="container">
         <div class="row justify-content-center bg-light">
             <div class="col-md-8">

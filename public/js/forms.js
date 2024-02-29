@@ -5,7 +5,7 @@ var __webpack_exports__ = {};
   \*******************************/
 function addRequiredFieldClass() {
   // Get all input and select elements with the required attribute
-  var requiredFields = document.querySelectorAll('input[required], select[required]');
+  var requiredFields = document.querySelectorAll('input[required], select[required], label[required]');
 
   // Iterate over each required field
   requiredFields.forEach(function (field) {
