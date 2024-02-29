@@ -97,7 +97,6 @@
                             </div>
                     </div>
                     <div class="row">
-                        <!-- Country -->
                         <div class="col mb-3">
                             <!-- Country -->
                                 <x-input-label for="country_id" :value="__('Country')" class="cm-input-label" />
@@ -113,10 +112,8 @@
                             <!-- State -->
                             <div class="col mb-3">
                                 <x-input-label for="state_id" :value="__('State/Province')" class="cm-input-label"  />
-                                <select id="state_id" name="state_id" className="ui dropdown" class="hide search selection dropdown w-100 ">
-                                    <option value="">Select State/Province</option>
-                                    {{-- The following options will be populated dynamically using JavaScript --}}
-                                </select>
+                                <div id="state_container">
+                                </div>
                                 <x-input-error :messages="$errors->get('state_id')" class="mt-2" />
                             </div>
                         </div>
@@ -185,12 +182,8 @@
         $('#country_id').dropdown({
             onChange: function(value, text, $selectedItem) {
                 const countrySelect = $('#country_id');
-                const stateSelect = $('#state_id');
                 // Clear existing options in the state dropdown
-                $('#state_id').children().remove();
-                $('#state_id').addClass('hide');
-                $('#state_id').removeClass('ui dropdown search selection');
-                $('#state_id').removeAttr('class');
+                $('#state_id').remove();
 
                 // Show spinner or loading indicator
                 Utils.showSpinner(); // Ensure this is a function call
@@ -199,19 +192,18 @@
                 $.ajax({
                     url: '/api/system/getStatesbyCountry/' + value, // 'value' is the selected country_id from the dropdown
                     success: function(response) {
+                        $('#state_container').append('<select id="state_id" name="state_id" class="">' +
+                            '<option value="">Select State/Province</option>' +
+                            '</select>');
                         if (response.length > 0) {
-                            $('#state_id').removeClass('hide');
-                            $('.dropdown').removeClass('hide');
-
                             // Populate the state dropdown with the fetched states
-                            response.forEach(function (state) {
-                                $('#state_id').append($('<option></option>').attr('value', state.id).text(state.name_en+' ('+state.short_en+')'));
+                            $.each(response, function(index, state) {
+                                $('#state_id').append('<option value="' + state.id + '">' + state.name_en + ' (' + state.short_en + ')</option>');
                             });
-                            // Refresh the state dropdown to reflect the changes
-                            stateSelect.addClass('ui dropdown search selection');
-                            stateSelect.dropdown({action: 'activate'});
+                            $('#state_id').addClass('ui dropdown search selection w-100');
+                            $('#state_id').dropdown();
+                            $('#state_id').removeClass('hide');
                         }
-                        $('#state_id').addClass('hide');
                         // Hide spinner or loading indicator
                         Utils.hideSpinner(); // Ensure this is a function call
                     },
@@ -220,6 +212,7 @@
                         Utils.hideSpinner(); // Ensure this is a function call
                     }
                 });
+                $('#state_id').dropdown({ fullTextSearch: 'exact', selectOnBlur: false, forceSelection: false, showOnFocus: false, sortSelect: true });
             }
             });
         // });
