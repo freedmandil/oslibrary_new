@@ -23,7 +23,7 @@ class SystemController extends Controller
         // Query books with the specified shelf name
             $states = SysState::select('*')->where('country_id', intval($country_id))->orderBy('name_en')->get();
 
-        return response()->json($states);
+        return $states ? response()->json($states) : json(['error'=>true]);
     }
 }
 

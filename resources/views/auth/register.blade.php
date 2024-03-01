@@ -100,7 +100,7 @@
                         <div class="col mb-3">
                             <!-- Country -->
                                 <x-input-label for="country_id" :value="__('Country')" class="cm-input-label cm-required-field" required />
-                                <select id="country_id" name="country_id" className="ui search selection dropdown" class="search selection w-100" required>
+                                <select id="country_id" name="country_id" class="dropdown ui search selection w-100 country_id" required>
                                     <option value="">Select Country</option>
                                     @foreach ($countries as $country)
                                             <option value="{{ $country->id }}" {{ old('country_id') == $country->id ? 'selected' : '' }}>{{ $country->name_en }}</option>
@@ -112,7 +112,7 @@
                             <!-- State -->
                             <div class="col mb-3">
                                 <x-input-label for="state_id" :value="__('State/Province')" class="cm-input-label"  />
-                                <div id="state_container">
+                                <div id="state_container" >
                                 </div>
                                 <x-input-error :messages="$errors->get('state_id')" class="mt-2" />
                             </div>
@@ -149,7 +149,7 @@
                     <!-- Language Type -->
                     <div class="col mb-3">
                         <x-input-label for="language_id" :value="__('Language')" class="cm-input-label cm-required-field" />
-                        <select id="language_id" name="language_id" class="ui search selection dropdown w-100" required>
+                        <select id="language_id" name="language_id" class="ui search selection dropdown w-100 " required>
                             <option value="">Select User Language</option>
                             @foreach ($languages as $language)
                                     <option value="{{ $language->id }}" {{ old('language_id') == $language->id ? 'selected' : '' }}>
@@ -176,6 +176,9 @@
 
     <script src="{{ mix('/js/forms.js') }}"></script>
     <script>
+        // $('#country_id').dropdown({fullTextSearch: 'exact', selectOnBlur: false, forceSelection: false, showOnFocus: false,sortSelect: true});
+        // $('#cat_id').dropdown({fullTextSearch: 'exact', selectOnBlur: false, forceSelection: false, showOnFocus: false,sortSelect: true});
+        // $('#language_id').dropdown({fullTextSearch: 'exact', selectOnBlur: false, forceSelection: false, showOnFocus: false,sortSelect: true});
 
         $('.dropdown').dropdown({
             fullTextSearch: 'exact',
@@ -185,9 +188,9 @@
             sortSelect: true
         });
             // document.addEventListener('DOMContentLoaded', function() {
-            $('#country_id').dropdown({
-                onChange: function (value, text, $selectedItem) {
+            $('#country_id').on('change', function () {
                     const countrySelect = $('#country_id');
+                    var country_id = countrySelect.val();
                     // Clear existing options in the state dropdown
                     $('#state_id').remove();
 
@@ -196,17 +199,16 @@
 
                     // Fetch states for the selected country using AJAX
                     $.ajax({
-                        url: '/api/system/getStatesbyCountry/' + value, // 'value' is the selected country_id from the dropdown
+                        url: '/api/system/getStatesbyCountry/' + country_id, // 'value' is the selected country_id from the dropdown
                         success: function (response) {
                             // Append the new select element for states
-                            $('#state_container').append('<select id="state_id" name="state_id" ClassName="dropdown ui" class="hide ui dropdown search selection w-100">' +
+                            $('#state_container').append('<select id="state_id" name="state_id" class="hide ui dropdown search selection w-100">' +
                                 '<option value="">Select State/Province</option>' +
                                 '</select>');
                             // Check if the response contains states
                             if (response.length > 0) {
                                 // Populate the state dropdown with the fetched states
                                 const options = response.map(state => `<option value="${state.id}">${state.name_en} (${state.short_en})</option>`).join('');
-                                $('#state_id').append(options);
                                 // Initialize the dropdown now that the select element is populated and in the DOM
                                 $('#state_id').dropdown({
                                     fullTextSearch: 'exact',
@@ -214,10 +216,9 @@
                                     forceSelection: false,
                                     showOnFocus: false,
                                     sortSelect: true
-                                });
+                                }).append(options);
                                 // Remove the 'hide' class to show the dropdown
                                 // Assuming your element has an id 'myElement'
-                                $('#state_id').className = 'dropdown ui';
                                 $('#state_id').removeClass('hide');
                             }
                             // Hide spinner or loading indicator
@@ -228,8 +229,9 @@
                             Utils.hideSpinner(); // Ensure this is a function call
                         }
                     });
-                }
+
             });
 
+          //  });
     </script>
 </x-guest-layout>

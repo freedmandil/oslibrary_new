@@ -50,13 +50,5 @@
 </footer>
         </div>
 </body>
-<script>
-$('.dropdown').dropdown({
-    fullTextSearch: 'exact',
-    selectOnBlur: false,
-    forceSelection: false,
-    showOnFocus: false,
-    sortSelect: true
-});
-</script>
+
 </html>

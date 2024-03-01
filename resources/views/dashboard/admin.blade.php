@@ -61,6 +61,7 @@
                               userAccessLevel = '{{ $user->access_level }}';
                 </script>
                 <script src="{{ mix('/js/grid-books.js') }}"></script>
+
                 <div id="Grid_Container" class="container-fluid m-0 p-0 vh-100 w-100">
                     @if(old('shelf_number'))
                         <h2>Shelf Number: {{ old('shelf_number') }}</h2>
@@ -72,5 +73,13 @@
             </main>
         </div>
     </div>
-
+    <script>
+        $('.dropdown').dropdown({
+            fullTextSearch: 'exact',
+            selectOnBlur: false,
+            forceSelection: false,
+            showOnFocus: false,
+            sortSelect: true
+        });
+    </script>
 @endsection
