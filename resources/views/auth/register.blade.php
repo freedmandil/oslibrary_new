@@ -193,7 +193,10 @@
                     var country_id = countrySelect.val();
                     // Clear existing options in the state dropdown
                     $('#state_id').remove();
-
+                var optionsHTML = '<select id="state_id" name="state_id" class="hide ui dropdown search selection w-100">' +
+                    '<option value="">Select State/Province</option>' +
+                    '</select>';
+                $('#state_container').append(optionsHTML);
                     // Show spinner or loading indicator
                     Utils.showSpinner(); // Ensure this is a function call
 
@@ -202,9 +205,7 @@
                         url: '/api/system/getStatesbyCountry/' + country_id, // 'value' is the selected country_id from the dropdown
                         success: function (response) {
                             // Append the new select element for states
-                            $('#state_container').append('<select id="state_id" name="state_id" class="hide ui dropdown search selection w-100">' +
-                                '<option value="">Select State/Province</option>' +
-                                '</select>');
+
                             // Check if the response contains states
                             if (response.length > 0) {
                                 // Populate the state dropdown with the fetched states
