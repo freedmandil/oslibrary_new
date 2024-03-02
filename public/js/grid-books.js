@@ -69,10 +69,16 @@ function removeGrid() {
 // Append the new div to the Grid_Container
     gridContainer.appendChild(newDiv);
 }
-
-function viewRecord(id) {
+options = {};
+function viewBook(id) {
     // Logic to view the record
-    console.log('Viewing record', id);
+    var bookModal = new bootstrap.Modal('#viewBook', options)
+        bookModal.show();
+    $('#bookContent').remove();
+    $('#bookContainer').append('<div id="bookContent"></div>');
+    $('#bookContent').append('<h3>Book: '+id+'</h3>');
+
+
 }
 
 function editRecord(id) {
@@ -90,7 +96,8 @@ function addActionsColumn(columnDefs, userAccessLevel) {
         field: "action",
         headerName: "Actions",
         cellRenderer: function(params) {
-            let buttons = '<button onclick="viewRecord(' + params.data.id + ')" class="btn btn-primary btn-sm">View</button>';
+            let buttons = '<button onclick="viewBook(' + params.data.id + ')" class="btn btn-primary btn-sm">View</button>';
+
 
             if (userAccessLevel >= 5) {
                 buttons += '&nbsp;&nbsp;<button onclick="editRecord(' + params.data.id + ')" class="btn btn-success btn-sm">Edit</button>';
