@@ -11,3 +11,6 @@ window.bootstrap = require('bootstrap/dist/js/bootstrap.bundle');
 // Import ag-Grid library
 Grid = require('ag-grid-community');
 
+Library = {};
+Library.Models = {};
+Library.Collections = {};

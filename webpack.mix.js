@@ -1,10 +1,24 @@
 const mix = require('laravel-mix');
+const glob = require('glob');
+
+// Function to get all js files and compile them into one
+function mixScriptsFromFolder(folderPath, outputFilename) {
+    let files = glob.sync(folderPath);
+    mix.scripts(files, 'public/js/' + outputFilename);
+}
+
+// Example usage for your models and views
 
 // Compile app.js and forms.js
+mix.js('node_modules/underscore/underscore.js', 'public/js/core.js');
+mix.js('node_modules/backbone/backbone.js', 'public/js/core.js');
 mix.js('resources/js/app.js', 'public/js');
 mix.js('resources/js/utils.js', 'public/js');
 mix.js('resources/js/forms.js', 'public/js');
 mix.js('node_modules/fomantic-ui/dist/semantic.js', 'public/js');
+
+mixScriptsFromFolder('resources/js/models/*.js', 'models.js');
+mixScriptsFromFolder('resources/js/views/*.js', 'views.js');
 
 // Compile app.scss
 mix.sass('resources/sass/app.scss', 'public/css');

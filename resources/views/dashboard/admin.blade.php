@@ -78,7 +78,6 @@
                 <script>const userLanguage = '{{ $user->sys_language->lan_code }}',
                               userAccessLevel = '{{ $user->access_level }}';
                 </script>
-                <script src="{{ mix('/js/grid-books.js') }}"></script>
 
                 <div id="Grid_Container" class="container-fluid m-0 p-0 vh-100 w-100">
                     @if(old('shelf_number'))
@@ -101,5 +100,7 @@
             showOnFocus: false,
             sortSelect: true
         });
+        var booksGridView = new BooksGridView();
     </script>
+
 @endsection

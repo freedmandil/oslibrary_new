@@ -17,13 +17,20 @@
 
         <!-- Scripts -->
         <script src="//unpkg.com/alpinejs" defer></script>
-        <script src="{{ mix('/js/utils.js') }}"></script>
+        <script src="{{ mix('/js/core.js') }}"></script>
         <script src="{{ mix('/js/app.js') }}"></script>
+
+        <script src="{{ mix('/js/models.js') }}"></script>
+        <script src="{{ mix('/js/views.js') }}"></script>
+
+        <script src="{{ mix('/js/utils.js') }}"></script>
         <script src="{{ mix('/js/semantic.js') }}"></script>
 
 
     </head>
     <body>
+    
+    @include('partials.toast')
     <div class="spinner-overlay hide">
         <div class="spinner"></div>
     </div>
@@ -39,7 +46,6 @@
             @endif
 
 <main>
-    @include('partials.toast')
     <div class="bg-light">
         @yield('content')
     </div>

@@ -1,4 +1,5 @@
 {
+    "/js/core.js": "/js/core.js",
     "/js/app.js": "/js/app.js",
     "/js/utils.js": "/js/utils.js",
     "/js/forms.js": "/js/forms.js",
@@ -7,6 +8,8 @@
     "/css/bootstrap.css": "/css/bootstrap.css",
     "/css/bootstrap-utilities.css": "/css/bootstrap-utilities.css",
     "/css/bootstrap-grid.css": "/css/bootstrap-grid.css",
+    "/js/models.js": "/js/models.js",
+    "/js/views.js": "/js/views.js",
     "/css/all.css": "/css/all.css",
     "/css/bootstrap.rtl.css": "/css/bootstrap.rtl.css",
     "/js/grid-books.js": "/js/grid-books.js",

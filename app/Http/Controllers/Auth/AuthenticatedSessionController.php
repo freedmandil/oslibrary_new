@@ -44,6 +44,7 @@ class AuthenticatedSessionController extends Controller
             // it's likely an unexpected state. Log this issue or handle accordingly.
             // Redirecting back to the login route with an error message.
             return redirect()->intended('login')->with('error', 'There was an issue with your login details. Please try again.');
+
         }
     }
 
