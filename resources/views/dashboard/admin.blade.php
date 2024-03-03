@@ -49,7 +49,7 @@
             </nav>
 
             <!-- Main content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="grid_container">
                 <!-- Books Subtitle -->
                 <div class="row mb-3">
                     <div class="col">
@@ -60,10 +60,10 @@
                     <label for="shelf_number">Shelf Number:</label>
                     <div class="row">
                         <div class="col">
-                            <input type="text" class="form-control shelf_number" id="shelf_number_text" name="shelf_number_text" placeholder="Enter Shelf Number">
+                            <input type="text" class="form-control shelf_number_input" id="shelf_number_text" name="shelf_number_text" placeholder="Enter Shelf Number">
                         </div>
                         <div class="col">
-                            <select class="form-control shelf_number ui search selection dropdown" id="shelf_number_dropdown" name="shelf_number">
+                            <select class="form-control shelf_number_input ui search selection dropdown" id="shelf_number_dropdown" name="shelf_number">
                                 <option value="">Select Shelf Number</option>
                                 @foreach($shelfnumbers as $id => $name)
                                     <option value="{{ $name }}">{{ $name }}</option>
@@ -100,7 +100,9 @@
             showOnFocus: false,
             sortSelect: true
         });
-        var booksGridView = new BooksGridView();
+        document.addEventListener('DOMContentLoaded', function() {
+            var booksGridView = new Library.BooksGridView();
+        });
     </script>
 
 @endsection

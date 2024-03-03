@@ -72,11 +72,7 @@ function removeGrid() {
 options = {};
 function viewBook(id) {
     // Logic to view the record
-    var bookModal = new bootstrap.Modal('#viewBook', options)
-        bookModal.show();
-    $('#bookContent').remove();
-    $('#bookContainer').append('<div id="bookContent"></div>');
-    $('#bookContent').append('<h3>Book: '+id+'</h3>');
+
 
 
 }

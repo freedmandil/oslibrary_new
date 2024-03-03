@@ -18,12 +18,19 @@ class BookController extends Controller
             return response()->json(['error' => 'Method not found: {'.$method.'}' ], 404);
         }
     }
-    public function ByShelfName(Request $request): ?object
+    public function ByShelfname(Request $request, $shelf_name)
     {
-        $shelf_name = $request->input('shelf_name');
-
         // Call the shelf_name function from the LibBook model
-        $books = LibBook::shelf_name($request, $shelf_name);
+        $books = LibBook::BooksbyShelfname($shelf_name);
+
+        // Return the response
+        return response()->json($books);
+    }
+
+    public function ById(Request $request, $id)
+    {
+        // Call the shelf_name function from the LibBook model
+        $books = LibBook::BookbyId($shelf_name);
 
         // Return the response
         return response()->json($books);

@@ -49,7 +49,6 @@ mix.styles([
 
 //only load the appropriate css/js
 mix.copy('node_modules/bootstrap/dist/css/bootstrap.rtl.css', './public/css/bootstrap.rtl.css');
-mix.copy('resources/js/grid-books.js', './public/js/grid-books.js');
 mix.copy('node_modules/bootstrap/dist/css/bootstrap.rtl.css', './public/css/bootstrap.rtl.css');
 mix.copy('node_modules/fomantic-ui/dist/themes/default/assets/fonts/LatoLatin-Regular.woff', './public/css/themes/default/assets/fonts');
 mix.copy('node_modules/fomantic-ui/dist/themes/default/assets/fonts/LatoLatin-Regular.woff2', './public/css/themes/default/assets/fonts');

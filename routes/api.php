@@ -21,5 +21,5 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 });
 Route::get('/books/{method}/{param?}', [BookController::class, 'handle']);
 Route::get('/system/{method}/{param?}', [SystemController::class, 'handle']);
-Route::get('/messages/{method}/{param?}', [MessagesController::class, 'handle']);
+Route::post('/messages/{method}/{param?}', [MessagesController::class, 'handle']);
 

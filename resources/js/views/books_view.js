@@ -16,11 +16,14 @@ const columnTitleMap = {
     dateUpdated: { en: "Date Updated", he: "תאריך שינוי" }
 };
 
-var BooksGridView = Backbone.View.extend({
-    el: '#Grid_Container', // Set the element where the view will be rendered
+Library.BooksGridView = Backbone.View.extend({
+    el: '#grid_container', // Set the element where the view will be rendered
     events: {
-        'change #shelf_number_dropdown': 'render',
-        'change #shelf_number_text': 'render'
+       // 'change #shelf_number_dropdown': 'render',
+        'change .shelf_number_input': 'render',
+         'click .view-book': 'viewBook',
+         'click .edit-book': 'editBook',
+        'click .delete-book': 'deleteBook'
     },
     initialize: function() {
 
@@ -50,8 +53,7 @@ var BooksGridView = Backbone.View.extend({
         var columnDefs = []; // Define column definitions here, similar to your existing code
         var selectedValue = $('#shelf_number_dropdown').val() ? $('#shelf_number_dropdown').val() : $('#shelf_number_text').val();
         Utils.showSpinner();
-        booksCollection.options.shelf_name = selectedValue;
-        booksCollection.BooksbyShelf().done(function(response) {
+        booksCollection.BooksbyShelf(selectedValue).done(function(response) {
             Utils.hideSpinner();
             // Process fetched data
             response.forEach(item => {
@@ -75,7 +77,7 @@ var BooksGridView = Backbone.View.extend({
                     cellClass: (key === 'assignment') ? function(params) {
                         if (params.data.color_name) {
                             // Prefix 'sys_' to the color_name and return it as the class name
-                            return 'sys_' + params.data.color_name;
+                            return 'sys_' + params.data.color_name + ' rounded-3';
                         }
                     } : null
                 };
@@ -108,9 +110,10 @@ var BooksGridView = Backbone.View.extend({
                 ],
             },
         };
-        removeGrid();
+        this.removeGrid();
         Grid.createGrid(this.el.querySelector('#Books_Grid'), gridOptions);
     },
+
     removeGrid: function removeGrid() {
         var gridContainer = document.getElementById('Grid_Container');
 
@@ -155,20 +158,36 @@ var BooksGridView = Backbone.View.extend({
         field: "action",
         headerName: "Actions",
         cellRenderer: function(params) {
-            let buttons = '<button onclick="viewBook(' + params.data.id + ')" class="btn btn-primary btn-sm">View</button>';
+            let buttons = '';
+            let id = params.data.id;
+            let viewButton = $('<button>', {
+                class: 'btn btn-primary btn-sm view-book',
+                text: 'View',
+                'data-id': id
+            });
+            buttons += viewButton.prop('outerHTML');
 
 
             if (userAccessLevel >= 5) {
-                buttons += '&nbsp;&nbsp;<button onclick="editRecord(' + params.data.id + ')" class="btn btn-success btn-sm">Edit</button>';
+                let editButton = $('<button>', {
+                    class: 'btn btn-success btn-sm edit-book',
+                    text: 'Edit',
+                    'data-id': id
+                });
+                buttons += '&nbsp;'+editButton.prop('outerHTML');
             }
 
             if (userAccessLevel >= 7) {
-                buttons += '&nbsp;&nbsp;<button onclick="deleteRecord(' + params.data.id + ')" class="btn btn-danger btn-sm">Delete</button>';
+                let deleteButton = $('<button>', {
+                    class: 'btn btn-danger btn-sm delete-book',
+                    text: 'Delete',
+                    'data-id': id
+                });
+                buttons += '&nbsp;'+deleteButton.prop('outerHTML');
             }
 
             return buttons;
         },
-        // adjust this as needed (e.g., set cell style or width)
     };
 
     columnDefs.push(actionsColumn);
@@ -176,22 +195,41 @@ var BooksGridView = Backbone.View.extend({
 },
     viewBook: function(event) {
         var id = $(event.currentTarget).data('id');
-        var model = this.collection.get(id);
-        // Logic to view the record
-        var bookModal = new bootstrap.Modal('#viewBook', options);
-        bookModal.show();
-        $('#bookContent').remove();
-        $('#bookContainer').append('<div id="bookContent"></div>');
-        $('#bookContent').append('<h3>Book: ' + model.get('id') + '</h3>');
+        var bookView = new Library.BookView({ bookId: id });
+
     },
-editRecord: function (id) {
+editBook: function (id) {
     // Logic to edit the record
     console.log('Editing record', id);
 },
-deleteRecord: function(id) {
+deleteBook: function(id) {
     // Logic to delete the record
     console.log('Deleting record', id);
 }
+});
+
+Library.BookView = Backbone.View.extend({
+    el: '#view_container', // Set the element where the view will be rendered
+    events: {
+        // 'change #shelf_number_dropdown': 'render',
+
+    },
+    initialize: function (options) {
+        this.bookId = options.bookId;
+        // Initialize any variables or setup logic here
+        booksCollection = new Library.Collections.Books();
+
+        this.render(this.bookId);
+    },
+    render: function (bookId) {
+        options = {};
+        var bookModal = new bootstrap.Modal('#viewBook', options)
+        bookModal.show();
+        $('#bookContent').remove();
+        $('#bookContainer').append('<div id="bookContent"></div>');
+        $('#bookContent').append('<h3>Book: '+bookId+'</h3>');
+        // Render the grid and populate it with data
+    }
 });
 
 // Instantiate the BooksGridView

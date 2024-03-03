@@ -17,22 +17,37 @@ Library.Collections.Books = Backbone.Collection.extend({
             this.options = options || {};
         },
 
-        BooksbyShelf: function () {
-            var self = this,
-                baseUrl = this.url(), // Use the function to ensure we always get the base URL
-                shelfName = this.options.shelf_name ? this.options.shelf_name : ''; // Ensure shelf_name exists
+    BooksbyShelf: function (shelfName) {
+        var self = this,
+            baseUrl = this.url();
+        var urlWithShelf = baseUrl + 'ByShelfName/' + encodeURIComponent(shelfName);
 
-            var urlWithShelf = baseUrl + 'ByShelfName/' + encodeURIComponent(shelfName); // Correctly build the URL
+        // Now, perform a fetch operation
+        return this.fetch({
+            url: urlWithShelf,
+            success: function(collection, response, options) {
+                return response;
+            },
+            error: function(collection, response, options) {
+                Utils.sendMessage('', 'error', 'Error fetching books by shelf. Shelf: ' + shelfName);
+            }
+        });
+    },
 
-            // Now, perform a fetch operation
-            return this.fetch({
-                url: urlWithShelf, // Use the constructed URL
-                success: function(collection, response, options) {
-                    return response;
-                },
-                error: function(collection, response, options) {
-                    Utils.sendMessage('', 'error', 'Error fetching books by shelf. Shelf: ' + shelfName);
-                }
-            });
-        }
+    BookbyId: function (id) {
+        var self = this,
+            baseUrl = this.url();
+        var urlWithShelf = baseUrl + 'byId/' + encodeURIComponent(id);
+
+        // Now, perform a fetch operation
+        return this.fetch({
+            url: urlWithShelf,
+            success: function(collection, response, options) {
+                return response;
+            },
+            error: function(collection, response, options) {
+                Utils.sendMessage('', 'error', 'Error fetching books by shelf. id: ' + id);
+            }
+        });
+    }
 });

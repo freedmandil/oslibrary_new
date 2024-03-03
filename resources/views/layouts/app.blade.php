@@ -6,6 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>@yield('title')</title>
+
         <link href="{{ mix('/css/all.css') }}" rel="stylesheet">
         <link href="{{ mix('/css/bootstrap.css') }}" rel="stylesheet">
     @if (Session::get('user_language') == 'he')
@@ -29,7 +30,7 @@
 
     </head>
     <body>
-    
+
     @include('partials.toast')
     <div class="spinner-overlay hide">
         <div class="spinner"></div>
@@ -55,6 +56,8 @@
     <!-- Footer Content -->
 </footer>
         </div>
+
+
 </body>
 
 </html>
