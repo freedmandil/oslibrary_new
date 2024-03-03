@@ -165,6 +165,7 @@ class LibBook extends Model
             'lib_publishers.name_en AS publisher_en',
             'lib_publishers.name_he AS publisher_he',
             'sys_languages.name_lan AS language',
+            'sys_languages.lan_code AS language_code',
             'loc_shelfnames.name AS shelfNumber',
             'loc_locations.name_en as assignment_en',
             'loc_locations.name_he as assignment_he',
@@ -184,7 +185,7 @@ class LibBook extends Model
             ->leftJoin('loc_assignments', 'lib_books.loc_assignment_id', '=', 'loc_assignments.id')
             ->leftJoin('loc_locations', 'loc_assignments.location_id', '=', 'loc_locations.id')
             ->leftJoin('sys_colors', 'loc_assignments.color_id', '=', 'sys_colors.id')
-            ->where('id', $id)
-            ->get();
+            ->where('lib_books.id', $id)
+            ->first();
     }
 }

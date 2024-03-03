@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\SystemController;
+use App\Http\Controllers\MessagesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,4 +23,5 @@ Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
 Route::get('/books/{method}/{param?}', [BookController::class, 'handle']);
 Route::get('/system/{method}/{param?}', [SystemController::class, 'handle']);
 Route::post('/messages/{method}/{param?}', [MessagesController::class, 'handle']);
+Route::get('/messages/{method}/{param?}', [MessagesController::class, 'handle']);
 

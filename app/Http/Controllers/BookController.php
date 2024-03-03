@@ -30,7 +30,7 @@ class BookController extends Controller
     public function ById(Request $request, $id)
     {
         // Call the shelf_name function from the LibBook model
-        $books = LibBook::BookbyId($shelf_name);
+        $books = LibBook::BookbyId($id);
 
         // Return the response
         return response()->json($books);

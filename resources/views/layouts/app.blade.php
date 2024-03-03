@@ -32,8 +32,9 @@
     <body>
 
     @include('partials.toast')
-    <div class="spinner-overlay hide">
-        <div class="spinner"></div>
+    <div class="spinner-overlay hide flex-column align-items-center">
+        <div class="spinner-border text-primary" role="status"></div>
+        <div class="spinner_msg">Loading...</div>
     </div>
         <div>
             @include('layouts.navigation')
@@ -47,8 +48,14 @@
             @endif
 
 <main>
-    <div class="bg-light">
-        @yield('content')
+    <div id="alert-container"></div>
+    @include('partials.alert')
+    <div id="modal-container"></div>
+
+    <div class="w-100" id="view_container">
+        <div class="bg-light">
+            @yield('content')
+        </div>
     </div>
 </main>
 
@@ -59,5 +66,6 @@
 
 
 </body>
-
+<script>
+</script>
 </html>

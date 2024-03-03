@@ -27,12 +27,37 @@ class MessagesController extends Controller
         $allowedTypes = ['', 'toast', 'alert', 'modal'];
 
         // Check if the provided type and level are valid
-        if (!in_array($allowedLevels) || !in_array($allowedTypes)) {
+        if (!in_array($level, $allowedLevels) || !in_array($type, $allowedTypes)) {
             return response()->json(['success' => false, 'error' => 'Invalid level']);
         }
 
         session()->flash($level, $message);
 
         return response()->json(['success' => true]);
+    }
+
+    public function getMessage()
+    {
+        $level = 'primary';
+        if (session('success')) {
+            $level = 'success';
+        }
+        if (session('error')) {
+            $level = 'danger';
+        }
+        if (session('warning')) {
+            $level = 'warning';
+        }
+        if (session('status')) {
+            $level = 'status';
+        }
+        if (session('info')) {
+            $level = 'info';
+        }
+        if (session('message')) {
+            $message = session('message');
+        }
+
+        return response()->json(['type'=>'toast', 'level' => $level, 'message' => $message]);
     }
 }

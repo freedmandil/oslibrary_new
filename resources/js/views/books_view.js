@@ -93,7 +93,7 @@ Library.BooksGridView = Backbone.View.extend({
 
     populateGrid: function(data, columnDefs) {
         // Populate the AgGrid with data and column definitions
-        var enable_rtl = (userLanguage == 'he');
+        var enable_rtl = (userLanguage === 'he');
 
         const gridOptions = {
             columnDefs: columnDefs,
@@ -221,15 +221,95 @@ Library.BookView = Backbone.View.extend({
 
         this.render(this.bookId);
     },
-    render: function (bookId) {
-        options = {};
-        var bookModal = new bootstrap.Modal('#viewBook', options)
-        bookModal.show();
-        $('#bookContent').remove();
-        $('#bookContainer').append('<div id="bookContent"></div>');
-        $('#bookContent').append('<h3>Book: '+bookId+'</h3>');
-        // Render the grid and populate it with data
-    }
+
+        render: function(bookId) {
+            var options = {};
+            var bookModal = new bootstrap.Modal('#viewBook', options);
+            $('#bookContent').remove();
+            $('#bookContainer').append('<div id="bookContent"></div>');
+            Utils.showSpinner();
+
+            var bookData = booksCollection.BookbyId(bookId).done(function(response) {
+                    // Process fetched data
+                        // Concatenate 'author_first' and 'author_last' and assign it to 'author' field
+                        var author_first = (response.author_first) ? response.author_first : '',
+                            author_middle = (response.author_middle) ? response.author_middle : '';
+                        author_last = (response.author_last) ? response.author_last : '';
+                        response.author = author_first + ' ' + author_middle + ' ' + author_last;
+                        response.author = response.author ? response.author : response.author_acronym;
+                var bookData = response;
+                if (userLanguage !== 'he') {
+                    var modalContent = `
+                        <div class="container ${(userLanguage === 'he') ? 'rtl' : ''}">
+                             <div class="header alert alert-info">
+                                <h3 class="fw-bold ${(bookData.language_code === 'he') ? 'rtl' : ''}">${Utils.formatValue(bookData.title)}</h3>
+                                <h3 class="${(bookData.language_code === 'he') ? 'rtl' : ''}">${Utils.formatValue(bookData.subtitle)}</h3>
+                                <h4 class="${(bookData.language_code === 'he') ? 'rtl' : ''}">${Utils.formatValue(bookData.author)}</h4>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h5>General Details</h5>
+                                    <p><strong>BookID:</strong> ${Utils.formatValue(bookData.id)}  ${bookData.BookRef ? '<strong>Book Ref.:</strong>' + bookData.BookRef : ''}</p>
+                                    <p><strong>Title:</strong> ${Utils.formatValue(bookData.title)} ${bookData.subtitle ? '- ' + bookData.subtitle : ''}</p>
+                                    <p><strong>Author:</strong> ${Utils.formatValue(bookData.author)}</p>
+                                    <p><strong>Edition:</strong> ${Utils.formatValue(bookData.edition)}</p>
+                                    <p><strong>Volume:</strong> ${Utils.formatValue(bookData.volume)} ${bookData.volume_name ? '- ' + bookData.volume_name : ''}</p>
+                                    <p><strong>Type:</strong> ${Utils.formatValue(bookData.type)}</p>
+                                    <p><strong>Language:</strong> ${Utils.formatValue(bookData.language)}</p>
+                                    <p><strong>Notes:</strong> ${Utils.formatValue(bookData.notes)}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>Classification & Publication</h5>
+                                    <p><strong>Topic:</strong> ${bookData.language_code === 'he' ? Utils.formatValue(bookData.topic_he) : Utils.formatValue(bookData.topic_he)}</p>
+                                    <p><strong>Publisher:</strong>   ${bookData.language_code === 'he' ? Utils.formatValue(bookData.publisher_he) : Utils.formatValue(bookData.publisher_he)}</p>
+                                    <p><strong>Shelf Number:</strong> ${Utils.formatValue(bookData.shelfNumber)}&nbsp;|&nbsp;<strong>Book Number:</strong> ${Utils.formatValue(bookData.seferNumber)}</p>
+                                    <p><strong>Location:</strong> <span class="p-2 sys_${bookData.color_name}"> ${bookData.language_code === 'he' ? Utils.formatValue(bookData.assignment_he) : Utils.formatValue(bookData.assignment_he)}</p></span>
+                                    <p><strong>Barcode:</strong> ${Utils.formatValue(bookData.barcode)}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    var modalContent = `
+                        <div class="container ${(userLanguage === 'he') ? 'rtl' : ''}">
+                            <div class="header alert alert-info">
+                                <h3 class="fw-bold ${(bookData.language_code === 'he') ? 'rtl' : ''}">${Utils.formatValue(bookData.title)}</h3>
+                                <h3 class="${(bookData.language_code === 'he') ? 'rtl' : ''}">${Utils.formatValue(bookData.subtitle)}</h3>
+                                <h4 class="${(bookData.language_code === 'he') ? 'rtl' : ''}">${Utils.formatValue(bookData.author)}</h4>
+                            </div>
+                               <div class="row">
+                                <div class="col-md-6">
+                                    <h5>פרטים כללים</h5>
+                                    <p><strong>מספר יסודי:</strong> ${Utils.formatValue(bookData.id)}  ${bookData.BookRef ? '<strong>מספר ישן.:</strong>' + bookData.BookRef : ''}</p>
+                                    <p><strong>שם:</strong> ${Utils.formatValue(bookData.title)} ${bookData.subtitle ? '- ' + bookData.subtitle : ''}</p>
+                                    <p><strong>מחבר:</strong> ${Utils.formatValue(bookData.author)}</p>
+                                    <p><strong>מדורה:</strong> ${Utils.formatValue(bookData.edition)}</p>
+                                    <p><strong>חלק:</strong> ${Utils.formatValue(bookData.volume)} ${bookData.volume_name ? '- ' + bookData.volume_name : ''}</p>
+                                    <p><strong>סוג:</strong> ${Utils.formatValue(bookData.type)}</p>
+                                    <p><strong>שפה:</strong> ${Utils.formatValue(bookData.language)}</p>
+                                    <p><strong>הערות:</strong> ${Utils.formatValue(bookData.notes)}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>סיווג והוצאת ספרים</h5>
+                                    <p><strong>עניין:</strong> ${bookData.language_code === 'he' ? Utils.formatValue(bookData.topic_he) : Utils.formatValue(bookData.topic_he)}</p>
+                                    <p><strong>מוציא לאור:</strong>   ${bookData.language_code === 'he' ? Utils.formatValue(bookData.publisher_he) : Utils.formatValue(bookData.publisher_he)}</p>
+                                    <p><strong>מספר תא:</strong> ${Utils.formatValue(bookData.shelfNumber)} &nbsp;|&nbsp;<strong>מספר ספר:</strong> ${Utils.formatValue(bookData.seferNumber)}</p>
+                                    <p><strong>אתר:</strong> <span class="p-2 sys_${bookData.color_name}"> ${bookData.language_code === 'he' ? Utils.formatValue(bookData.assignment_he) : Utils.formatValue(bookData.assignment_he)}</p></span>
+                                    <p><strong>ברקוד:</strong> ${Utils.formatValue(bookData.barcode)}</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                $('#bookContent').append(modalContent);
+                Utils.hideSpinner();
+                bookModal.show();                });
+
+            // HTML structure for the modal content
+
+        }
+
 });
 
 // Instantiate the BooksGridView
