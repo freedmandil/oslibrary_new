@@ -202,5 +202,27 @@ class BookController extends Controller
         return response()->json($titles);
     }
 
+
+
+    public function updatePublisher(Request $request, $bookId, $publisherId)
+    {
+        $book = LibBook::findOrFail($bookId);
+        $publisher = $book->lib_publisher->findOrFail($publisherId);
+
+        // Validate request data
+        $validatedData = $request->validate([
+            'publisher_name' => 'required',
+            // Add other validation rules as needed
+        ]);
+
+        // Update publisher details
+        $publisher->update([
+            'publisher_name' => $request->publisher_name,
+            // Update additional fields as needed
+        ]);
+
+        return response()->json($publisher);
+    }
+
 }
 

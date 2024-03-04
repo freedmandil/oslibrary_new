@@ -31,7 +31,7 @@
     },
     "name": "oslibrary",
     "description": "OS Library is a web application developed for Ohr Somayach/Tannenbaum College in Jerusalem, Israel. This application is designed to facilitate the management of Seforim (books) within the Yeshiva and its surroundings, providing an efficient and user-friendly platform for tracking, cataloging, and accessing books.",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "main": "webpack.config.cjs",
     "directories": {
         "test": "tests"

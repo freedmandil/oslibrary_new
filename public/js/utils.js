@@ -91,6 +91,7 @@ Utils.hideSpinner = function () {
 function renderMessage(options) {
   var bootstrapOptions = {
     bg: 'bg-primary',
+    name: 'primary',
     text: 'text-white',
     border: 'border-primary',
     title: 'Notice',
@@ -128,27 +129,43 @@ function renderMessage(options) {
       bootstrapOptions.title = "Notice";
       break;
   }
+  bootstrapOptions.alert = 'alert alert-' + bootstrapOptions.name;
+  bootstrapOptions.bg = 'bg-' + bootstrapOptions.name;
+  bootstrapOptions.textcolor = 'text-' + bootstrapOptions.text;
+  bootstrapOptions.border = 'border-' + bootstrapOptions.name;
 
   // Construct the message element based on message type
   var message;
+  var containerElement = document.querySelector('#view_container');
   switch (options.type) {
     case 'toast':
       message = renderToast(options.message, bootstrapOptions);
+      containerElement.innerHTML = message;
+      var toastElList = [].slice.call(document.querySelectorAll('.toast'));
+      var toastList = toastElList.map(function (toastEl) {
+        // Customize autohide and other options if needed
+        return new bootstrap.Toast(toastEl, {
+          autohide: true
+        }).show();
+      });
       break;
     case 'alert':
       message = renderAlert(options.message, bootstrapOptions);
+      containerElement.innerHTML = message;
       break;
     case 'modal':
       message = renderModal(options.message, bootstrapOptions);
+      containerElement.innerHTML = message;
+      var messageModal = new bootstrap.Modal('#viewMessageModal', options);
+      messageModal.show();
       break;
     default:
-      message = renderToast(options.message, bootstrapOptions);
+      message = renderAlert(options.message, bootstrapOptions);
+      containerElement.innerHTML = message;
       break;
   }
 
   // Append the message to the container element
-  var containerElement = document.querySelector('#view_container');
-  containerElement.innerHTML = message;
 }
 function renderToast(message, bootstrapOptions) {
   var toast = '<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11">' + '<div id="liveToast" class="toast ' + bootstrapOptions.bg + ' ' + bootstrapOptions.border + ' border-2" role="alert" aria-live="assertive" aria-atomic="true">' + '<div class="toast-header ' + bootstrapOptions.border + '">' + '<span class="fw-bold">' + bootstrapOptions.title + '</span>' + '</div>' + '<div class="toast-body fw-bold ' + bootstrapOptions.text + '">' + message + '</div>' + '</div>' + '</div>';
@@ -159,55 +176,37 @@ function renderAlert(message, bootstrapOptions) {
   return alert;
 }
 function renderModal(message, bootstrapOptions) {
-  var modal = '<div class="modal fade" id="viewMessage" tabindex="-1" aria-labelledby="viewMessage" aria-hidden="true">' + '<div class="modal-dialog ' + bootstrapOptions.border + ' ' + bootstrapOptions.bg + '">' + '<div class="modal-content border-0 bg-' + bootstrapOptions.bg + '">' + '<div class="modal-header border-0 ' + bootstrapOptions.alert + '">' + '<h1 class="modal-title fs-5">' + bootstrapOptions.title + '</h1>' + '</div>' + '<div class="modal-body border-0 ' + bootstrapOptions.bg + '">' + message + '</div>' + '<div class="modal-footer border-0">' + '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>' + '</div>' + '</div>' + '</div>' + '</div>';
+  var modal = '<div class="modal fade" id="viewMessageModal" tabindex="-1" aria-labelledby="viewMessage" aria-hidden="true">' + '<div class="modal-dialog ' + bootstrapOptions.border + ' ' + bootstrapOptions.bg + '">' + '<div class="modal-content border-0 bg-' + bootstrapOptions.bg + '">' + '<div class="modal-header border-0 ' + bootstrapOptions.bg + '">' + '<h1 class="modal-title ' + bootstrapOptions.text + ' fs-5">' + bootstrapOptions.title + '</h1>' + '</div>' + '<div class="modal-body border-0 ' + bootstrapOptions.alert + '">' + message + '</div>' + '<div class="modal-footer border-0">' + '<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>' + '</div>' + '</div>' + '</div>' + '</div>';
   return modal;
 }
-Utils.sendMessage = function (type, level, message) {
-  if (type && level && message) {
-    var messageOptions = {
-      type: type,
-      // Specify the type of message (toast, alert, modal)
-      level: level,
-      // Specify the level of the message (error, warning, success, info, primary)
-      message: message // The actual message content
-    };
-
-    // Call the renderMessage function with the message options
-    renderMessage(messageOptions);
-  } else {
-    var messageOptions = {
-      type: 'toast',
-      // Specify the type of message (toast, alert, modal)
-      level: 'error',
-      // Specify the level of the message (error, warning, success, info, primary)
-      message: 'There was an error with this request. Please try again later or contact the Administrator.'
-    };
-
-    // Call the renderMessage function with the message options
-    renderMessage(messageOptions);
-  }
-  Utils.sendSysMessage = function (type, level, message) {
-    if (type && level && message) {
-      var MessageView = new Library.MessagesView({
-        type: type,
-        level: level,
-        message: message
-      });
-    } else {
-      var SessionMessage = new Library.Models.Messages();
-      SessionMessage.getMessage().done(function (response) {
-        var MessageView = new Library.MessagesView({
-          options: {
-            type: response.type,
-            level: response.level,
-            message: response.message
-          }
-        });
-      }).fail(function (error) {
-        console.error('Error fetching message:', error);
-      });
-    }
+Utils.sendMessage = function (type, level, message, status) {
+  sendtype = type ? type : 'modal';
+  sendlevel = level ? level : 'error';
+  sendmessage = message ? message : 'There was an error with this request. Please try again later or contact the Administrator.';
+  var messageOptions = {
+    type: sendtype,
+    // Specify the type of message (toast, alert, modal)
+    level: sendlevel,
+    // Specify the level of the message (error, warning, success, info, primary)
+    message: sendmessage // The actual message content
   };
+
+  // Call the renderMessage function with the message options
+  renderMessage(messageOptions);
+  Utils.hideSpinner();
+  if (status && status == 401) {
+    window.location.href = '/logout';
+  }
+};
+Utils.sendSysMessage = function (type, level, message) {
+  sendtype = type ? type : 'modal';
+  sendlevel = level ? level : 'error';
+  sendmessage = message ? message : 'There was an error with this request. Please try again later or contact the Administrator.';
+  var MessageView = new Library.MessagesView({
+    type: sendtype,
+    level: sendlevel,
+    message: sendmessage
+  });
 };
 Utils.formatValue = function (value) {
   return value ? value : '';

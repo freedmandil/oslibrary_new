@@ -17,5 +17,12 @@ class AuthorController extends Controller
         return $author ? response()->json($author) : json(['error'=>true]);
     }
 
+    public function getBooksByAuthorId(Request $request, $author_id)
+    {
+        // Query books with the specified shelf name
+        $books = libBook::select('*')->where('author_id', intval($author_id))->get();
+
+        return $books ? response()->json($books) : json(['error'=>true]);
+    }
 
 }

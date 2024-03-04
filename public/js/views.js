@@ -204,7 +204,7 @@ Library.BooksGridView = Backbone.View.extend({
             self.populateGrid(response, columnDefs);
         }).fail(function(error) {
             Utils.hideSpinner();
-            Utils.sendMessage('', 'error', 'There was an error: ' + error);
+            console.log('Aggrid Failed to Populate due to response error');
         });
     },
     onSelectionChanged: function() {

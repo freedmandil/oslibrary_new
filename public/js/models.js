@@ -91,7 +91,9 @@ Library.Collections.Books = Backbone.Collection.extend({
                 return response;
             },
             error: function(collection, response, options) {
-                Utils.sendMessage('toast', 'error', 'Error fetching books by shelf. Shelf: ' + shelfName);
+                error = response.responseJSON;
+                Utils.sendMessage(error.type, error.level, error.message, response.status);
+
             }
         });
     },
@@ -108,7 +110,7 @@ Library.Collections.Books = Backbone.Collection.extend({
                 return response;
             },
             error: function(collection, response, options) {
-                Utils.sendMessage('toast', 'error', 'Error fetching books by Id. id: ' + id);
+                Utils.sendMessage(error.type, error.level, error.message, response.status);
             }
         });
     },
@@ -140,8 +142,8 @@ Library.Collections.Books = Backbone.Collection.extend({
                 return response;
             },
             error: function(model, response, options) {
-                Utils.sendMessage('toast', 'error', 'Error adding author.');
-            }
+                error = response.responseJSON;
+                Utils.sendMessage(error.type, error.level, error.message);            }
         });
     },
 
@@ -157,8 +159,8 @@ Library.Collections.Books = Backbone.Collection.extend({
                 return response;
             },
             error: function(model, response, options) {
-                Utils.sendMessage('toast', 'error', 'Error updating author.');
-            }
+                error = response.responseJSON;
+                Utils.sendMessage(error.type, error.level, error.message);            }
         });
     },
 
@@ -174,8 +176,8 @@ Library.Collections.Books = Backbone.Collection.extend({
                 return response;
             },
             error: function(model, response, options) {
-                Utils.sendMessage('toast', 'error', 'Error updating book.');
-            }
+                error = response.responseJSON;
+                Utils.sendMessage(error.type, error.level, error.message);            }
         });
     },
 
@@ -191,8 +193,8 @@ Library.Collections.Books = Backbone.Collection.extend({
                 return response;
             },
             error: function(model, response, options) {
-                Utils.sendMessage('toast', 'error', 'Error adding book.');
-            }
+                error = response.responseJSON;
+                Utils.sendMessage(error.type, error.level, error.message);            }
         });
     }
 });

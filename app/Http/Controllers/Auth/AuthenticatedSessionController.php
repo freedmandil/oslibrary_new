@@ -38,7 +38,7 @@ class AuthenticatedSessionController extends Controller
             Session::put('user_permissions', $user->access_level);
             Session::put('user_language', $user->sys_language->lan_code);
 
-            return redirect()->intended('dashboard')->with('status', 'Welcome. You have successfully logged in.');; // Adjust 'dashboard' to your default post-login location
+            return redirect()->intended('dashboard')->with('status', 'Welcome. You have successfully logged in.'); //
         } else {
             // If, for any reason, Auth::check() returns false after calling authenticate(),
             // it's likely an unexpected state. Log this issue or handle accordingly.
