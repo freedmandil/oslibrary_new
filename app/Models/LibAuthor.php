@@ -19,11 +19,16 @@ class LibAuthor extends Model
     ];
 
     use HasFactory;
-    protected $table = 'lib_authors'; // Specify the table name if it's not the default
+    protected $table = 'lib_authors';
     public $timestamps = false;
 
-    public function book()
+    public function lib_book()
     {
         return $this->belongsToMany(LibBook::class, 'lib_authorbook_relationship', 'author_id', 'book_id');
+    }
+
+    public function lib_books()
+    {
+        return $this->hasMany(LibAuthorbookRelationship::class, 'author_id');
     }
 }

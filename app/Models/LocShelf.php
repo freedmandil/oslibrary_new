@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class LocShelfname extends Model
+class LocShelf extends Model
 {
     protected $fillable = [
         'name',

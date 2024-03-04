@@ -18,4 +18,19 @@ class LibAuthorbookRelationship extends Model
 
     public $timestamps = false;
 
+    public function AuthorIdsByBookId($book_id)
+    {
+        return $this->select('author_id')->where('book_id', $book_id)->get();
+    }
+
+    public function lib_book()
+    {
+        return $this->belongsTo(LibBook::class, 'book_id');
+    }
+
+    public function lib_author()
+    {
+        return $this->belongsTo(LibAuthor::class, 'author_id');
+    }
+
 }

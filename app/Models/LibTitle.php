@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class LibTitle extends Model
 {
+    use HasFactory;
+
+    protected $table = 'lib_titles';
+
     protected $fillable = [
         'book_id',
         'book_title',
@@ -20,5 +24,5 @@ class LibTitle extends Model
         return $this->belongsTo(LibBook::class, 'book_id');
     }
 
-    use HasFactory;
+
 }

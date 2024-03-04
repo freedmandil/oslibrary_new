@@ -18,6 +18,8 @@ const columnTitleMap = {
 
 Library.BooksGridView = Backbone.View.extend({
     el: '#grid_container', // Set the element where the view will be rendered
+    grid: null,
+    gridApi: null,
     events: {
        // 'change #shelf_number_dropdown': 'render',
         'change .shelf_number_input': 'render',
@@ -26,8 +28,8 @@ Library.BooksGridView = Backbone.View.extend({
         'click .delete-book': 'deleteBook'
     },
     initialize: function() {
-
-        var columnDefs = Object.keys(columnTitleMap).map(key => {
+        let gridApi;
+        var columnDefs = Object.k   eys(columnTitleMap).map(key => {
             let field = (key === 'topic' || key === 'publisher' || key === 'assignment') ? key + '_' + userLanguage : key;
             return {
                 field: field,
@@ -90,15 +92,21 @@ Library.BooksGridView = Backbone.View.extend({
             Utils.sendMessage('', 'error', 'There was an error: ' + error);
         });
     },
+    onSelectionChanged: function() {
 
+},
     populateGrid: function(data, columnDefs) {
         // Populate the AgGrid with data and column definitions
         var enable_rtl = (userLanguage === 'he');
+        var self = this;
 
         const gridOptions = {
             columnDefs: columnDefs,
             rowData: data,
             enableRtl: enable_rtl,
+            rowSelection: 'multiple',
+            rowMultiSelectWithClick: true,
+            onSelectionChanged: self.onSelectionChanged,
             autoSizeStrategy: {
                 type: 'fitGridWidth',
                 defaultMinWidth: 100,
@@ -110,8 +118,8 @@ Library.BooksGridView = Backbone.View.extend({
                 ],
             },
         };
-        this.removeGrid();
-        Grid.createGrid(this.el.querySelector('#Books_Grid'), gridOptions);
+        self.removeGrid();
+        self.grid = Grid.createGrid(self.el.querySelector('#Books_Grid'), gridOptions);
     },
 
     removeGrid: function removeGrid() {
@@ -198,9 +206,9 @@ Library.BooksGridView = Backbone.View.extend({
         var bookView = new Library.BookView({ bookId: id });
 
     },
-editBook: function (id) {
-    // Logic to edit the record
-    console.log('Editing record', id);
+editBook: function(event) {
+    var id = $(event.currentTarget).data('id');
+    var bookEdit = new Library.EditBookView({ bookId: id });
 },
 deleteBook: function(id) {
     // Logic to delete the record
@@ -221,12 +229,37 @@ Library.BookView = Backbone.View.extend({
 
         this.render(this.bookId);
     },
-
+        template: function () {
+        var html = `<div class="modal fade" id="viewBookModal" tabindex="-1" aria-labelledby="viewBook" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="viewBookTitle">Book Details</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="bookContainer">
+                            <div id="bookContent"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+        return html;
+        },
         render: function(bookId) {
+        if ($('#viewBookModal').length > 0) {
+            $('#viewBookModal').remove();
+        }
+            $('#view_container').append(this.template());
             var options = {};
-            var bookModal = new bootstrap.Modal('#viewBook', options);
-            $('#bookContent').remove();
-            $('#bookContainer').append('<div id="bookContent"></div>');
+            var bookModal = new bootstrap.Modal('#viewBookModal', options);
+            this.$('#bookContent').remove();
+            this.$('#bookContainer').append('<div id="bookContent"></div>');
             Utils.showSpinner();
 
             var bookData = booksCollection.BookbyId(bookId).done(function(response) {
@@ -242,9 +275,9 @@ Library.BookView = Backbone.View.extend({
                     var modalContent = `
                         <div class="container ${(userLanguage === 'he') ? 'rtl' : ''}">
                              <div class="header alert alert-info">
-                                <h3 class="fw-bold ${(bookData.language_code === 'he') ? 'rtl' : ''}">${Utils.formatValue(bookData.title)}</h3>
-                                <h3 class="${(bookData.language_code === 'he') ? 'rtl' : ''}">${Utils.formatValue(bookData.subtitle)}</h3>
-                                <h4 class="${(bookData.language_code === 'he') ? 'rtl' : ''}">${Utils.formatValue(bookData.author)}</h4>
+                                <h3 class="fw-bold ${(bookData.language_code === 'he') ? 'rtl' : 'ltr'}">${Utils.formatValue(bookData.title)}</h3>
+                                <h3 class="${(bookData.language_code === 'he') ? 'rtl' : 'ltr'}">${Utils.formatValue(bookData.subtitle)}</h3>
+                                <h4 class="${(bookData.language_code === 'he') ? 'rtl' : 'ltr'}">${Utils.formatValue(bookData.author)}</h4>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
@@ -260,10 +293,10 @@ Library.BookView = Backbone.View.extend({
                                 </div>
                                 <div class="col-md-6">
                                     <h5>Classification & Publication</h5>
-                                    <p><strong>Topic:</strong> ${bookData.language_code === 'he' ? Utils.formatValue(bookData.topic_he) : Utils.formatValue(bookData.topic_he)}</p>
-                                    <p><strong>Publisher:</strong>   ${bookData.language_code === 'he' ? Utils.formatValue(bookData.publisher_he) : Utils.formatValue(bookData.publisher_he)}</p>
+                                    <p><strong>Topic:</strong> ${bookData.language_code === 'he' ? Utils.formatValue(bookData.topic_he) : Utils.formatValue(bookData.topic_en)}</p>
+                                    <p><strong>Publisher:</strong>   ${bookData.language_code === 'he' ? Utils.formatValue(bookData.publisher_he) : Utils.formatValue(bookData.publisher_en)}</p>
                                     <p><strong>Shelf Number:</strong> ${Utils.formatValue(bookData.shelfNumber)}&nbsp;|&nbsp;<strong>Book Number:</strong> ${Utils.formatValue(bookData.seferNumber)}</p>
-                                    <p><strong>Location:</strong> <span class="p-2 sys_${bookData.color_name}"> ${bookData.language_code === 'he' ? Utils.formatValue(bookData.assignment_he) : Utils.formatValue(bookData.assignment_he)}</p></span>
+                                    <p><strong>Location:</strong> <span class="p-2 sys_${bookData.color_name}"> ${userLanguage === 'he' ? Utils.formatValue(bookData.assignment_he) : Utils.formatValue(bookData.assignment_en)}</p></span>
                                     <p><strong>Barcode:</strong> ${Utils.formatValue(bookData.barcode)}</p>
                                 </div>
                             </div>
@@ -273,9 +306,9 @@ Library.BookView = Backbone.View.extend({
                     var modalContent = `
                         <div class="container ${(userLanguage === 'he') ? 'rtl' : ''}">
                             <div class="header alert alert-info">
-                                <h3 class="fw-bold ${(bookData.language_code === 'he') ? 'rtl' : ''}">${Utils.formatValue(bookData.title)}</h3>
-                                <h3 class="${(bookData.language_code === 'he') ? 'rtl' : ''}">${Utils.formatValue(bookData.subtitle)}</h3>
-                                <h4 class="${(bookData.language_code === 'he') ? 'rtl' : ''}">${Utils.formatValue(bookData.author)}</h4>
+                                <h3 class="fw-bold ${(bookData.language_code === 'he') ? 'rtl' : 'ltr'}">${Utils.formatValue(bookData.title)}</h3>
+                                <h3 class="${(bookData.language_code === 'he') ? 'rtl' : 'ltr'}">${Utils.formatValue(bookData.subtitle)}</h3>
+                                <h4 class="${(bookData.language_code === 'he') ? 'rtl' : 'ltr'}">${Utils.formatValue(bookData.author)}</h4>
                             </div>
                                <div class="row">
                                 <div class="col-md-6">
@@ -304,12 +337,177 @@ Library.BookView = Backbone.View.extend({
 
                 $('#bookContent').append(modalContent);
                 Utils.hideSpinner();
-                bookModal.show();                });
-
-            // HTML structure for the modal content
-
+                bookModal.show();
+            });
         }
-
 });
 
-// Instantiate the BooksGridView
+Library.EditBookView = Backbone.View.extend({
+    el: '#edit_container', // Ensure you have a corresponding container in your HTML
+    events: {
+        'click #saveBook': 'saveBook',
+        // You might want additional events for validation or dynamic form changes
+    },
+
+    initialize: function(options) {
+        this.bookId = options.bookId;
+        // Assuming booksCollection is available in the scope or passed in options
+        this.booksCollection = new Library.Collections.Books();
+
+        this.render(this.bookId);
+    },
+
+    template: function(bookData) {
+        // Template now includes form elements pre-filled with bookData values
+        // Note: Ensure you handle the possibility of null or undefined values in bookData
+        return `
+            <div class="modal fade" id="editBookModal" tabindex="-1" aria-labelledby="editBook" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="editBookTitle">Edit Book Details</h1>
+                        </div>
+                        <div id="bookEditForm" class="modal-body">
+                          <div id="bookContainer">
+                            <div id="editBookContent"></div>
+                          </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="saveBook">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    },
+
+    render: function(bookId) {
+        var self = this;
+        if ($('#editBookModal').length > 0) {
+            $('#editBookModal').remove();
+        }
+
+        Utils.showSpinner();
+
+        $('#edit_container').append(self.template(bookData));
+            var editModal = new bootstrap.Modal('#editBookModal', {id: bookId});
+            var bookData = booksCollection.BookbyId(bookId).done(function(response) {
+            var bookData = response;
+            var System = new Library.Models.System();
+
+
+
+            var editModalContent = `
+            <form id="editBookForm">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>General Details</h5>
+                            <p><strong>BookID:</strong> ${Utils.formatValue(bookData.id)}  ${bookData.BookRef ? '<strong>Book Ref.:</strong>' + bookData.BookRef : ''}</p>
+                            <div class="mb-3">
+                                <label for="editTitle" class="form-label">Title</label>
+                                <input type="text" class="form-control ${(bookData.language_code === 'he') ? 'rtl' : 'ltr'}" id="editTitle" value="${Utils.formatValue(bookData.title)}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editAuthor" class="form-label">Author</label>
+                                <select class="form-select dropdown ui" id="editAuthor">
+                                    ${Utils.formatValue(bookData.author_id)}
+                                </select>
+                            </div>
+                             <div class="mb-3">
+                                <label for="editEdition" class="form-label">Edition</label>
+                                <input type="number" class="form-control ${(bookData.language_code === 'he') ? 'rtl' : 'ltr'}" id="editEdition" value="${Utils.formatValue(bookData.edition)}">
+                            </div>
+                             <div class="mb-3">
+                                <label for="editVolume" class="form-label">Volume</label>
+                                <input type="number" class="form-control" id="editVolume" value="${Utils.formatValue(bookData.volume)}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editVolumeName" class="form-label">Volume Name</label>
+                                <input type="text" class="form-control" id="editVolumeName" value="${Utils.formatValue(bookData.volume_name)}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editType" class="form-label">Type</label>
+                                <input type="text" class="form-control" id="editType" value="${Utils.formatValue(bookData.type)}">
+                            </div>
+                            <div class="mb-3">
+                                <label for="editLanguage" class="form-label">Book Language</label>
+                                <select class="dropdown ui" id="editLanguage">
+                                    ${LanguagesSelect}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editNotes" class="form-label">Notes</label>
+                                    <textarea class="form-control" id="editNotes">
+                                         ${Utils.formatValue(bookData.notes)}
+                                    </textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Classification & Publication</h5>
+                            <div class="mb-3">
+                                <label for="editPublisher" class="form-label">Publisher</label>
+                                <input type="text" class="form-control" id="editPublisher" value="${Utils.formatValue(bookData.publisher)}">
+                            </div>
+                            <!-- Add more input fields for other classification & publication details here -->
+                        </div>
+                    </div>
+                    <!-- Add dropdowns for fields with _id suffix -->
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="editBookCategory" class="form-label">Book Category</label>
+                                <select class="form-select dropdown ui" id="editBookCategory">
+                                    <!-- Populate options dynamically -->
+                                </select>
+                                <button type="button" class="btn btn-sm btn-primary mt-2" id="addBookCategory">Add New Category</button>
+                            </div>
+                        </div>
+                        <!-- Add more dropdowns for other fields with _id suffix here -->
+                    </div>
+                </div>
+            </form>
+        `;
+
+                $('#editBookContent').append(editModalContent);
+                var Languages = [];
+                var LanguagesSelect = '';
+                System.getLanguages().done(function(response) {
+                    Languages = response.map(function(language) {
+                        var selected = (bookData.language_id === language.id) ? ' selected ' : '';
+                        return `<option value="${language.id}" ${selected} >${language.name_lan}</option>`;
+                    });
+                    Languages.forEach(function(language) {
+                        LanguagesSelect += language;
+                    });
+                    $('#editLanguage').append(LanguagesSelect);
+                });
+                $('.dropdown').dropdown();
+                Utils.hideSpinner();
+                editModal.show();
+            });
+    },
+
+    saveBook: function() {
+        var formData = {
+            // Collect form data
+            title: $('#bookTitle').val(),
+            // Include other fields here
+        };
+
+        // Example of updating the model. You'll need to adjust this to your application's needs
+        var book = this.booksCollection.get(this.bookId);
+        if (book) {
+            book.save(formData, {
+                success: function(model, response) {
+                    // Handle success, e.g., showing a success message and closing the modal
+                    $('#editBookModal').modal('hide');
+                },
+                error: function() {
+                    // Handle errors, e.g., showing an error message
+                }
+            });
+        }
+    }
+});

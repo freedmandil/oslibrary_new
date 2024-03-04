@@ -3,24 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
-    <div class="modal fade" id="viewBook" tabindex="-1" aria-labelledby="viewBook" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="viewBookTitle">Book Details</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="bookContainer">
-                  <div id="bookContent"></div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <div class="container-fluid">
         <!-- Dashboard Title -->
         <div class="row mb-4">

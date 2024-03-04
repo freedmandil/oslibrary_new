@@ -23,6 +23,9 @@
                 <li class="nav-item dropdown">
                     @php if (Auth::check()) { @endphp
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
                                 <button class="nav-link" type="submit">Logout</button>

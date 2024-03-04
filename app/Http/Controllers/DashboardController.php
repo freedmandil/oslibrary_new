@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\LibBook;
-use App\Models\LocShelfname;
+use App\Models\LocShelf;
 
 
 class DashboardController extends Controller
@@ -16,7 +16,7 @@ class DashboardController extends Controller
         $usr_cat = $user->usr_cat; // Access the user's profile
         $books = LibBook::all(); // Retrieve all books
         $books = LibBook::with(['lib_author', 'lib_titles', 'lib_publisher', 'tax_subcategory', 'tax_category', 'tax_topic', 'tax_group', 'sys_language', 'loc_assignment', 'loc_assignment.loc_location'])->get();
-        $shelfnumbers = LocShelfname::pluck('name', 'id');
+        $shelfnumbers = LocShelf::pluck('name', 'id');
 
 
         switch ($usr_cat->category_name) {

@@ -50,7 +50,7 @@ class MigrateBooksData extends Command
             $locAssignmentId = determineLocAssignmentId($shelfComponents['prefix'],$shelfComponents['number']);
 
 // Attempt to find an existing shelf name with the same components
-            $existingShelf = \App\Models\LocShelfname::where([
+            $existingShelf = \App\Models\LocShelf::where([
                 ['prefix', '=', $shelfComponents['prefix']],
                 ['number', '=', $shelfComponents['number']],
                 ['suffix', '=', $shelfComponents['suffix']],
@@ -61,7 +61,7 @@ class MigrateBooksData extends Command
                 $bookShelfnameId = trim($existingShelf->id);
             } else {
                 // If not found, create a new record and use its ID
-                $newShelf = \App\Models\LocShelfname::create([
+                $newShelf = \App\Models\LocShelf::create([
                     'name' => $oldBook->shelfno,
                     'prefix' => $shelfComponents['prefix'],
                     'number' => $shelfComponents['number'],

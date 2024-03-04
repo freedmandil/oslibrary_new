@@ -6,17 +6,6 @@ use Illuminate\Http\Request;
 
 class MessagesController extends Controller
 {
-    public function handle(Request $request, $method, $param = null)
-    {
-        // Check if the method exists in the controller
-        if (method_exists($this, $method)) {
-            // Call the method dynamically
-            return $this->{$method}($request, $param);
-        } else {
-            // Method not found, handle error or return response
-            return response()->json(['error' => 'Method not found: {'.$method.'}' ], 404);
-        }
-    }
     public function setMessage(Request $request)
     {
         $type = $request->input('type');
@@ -39,6 +28,8 @@ class MessagesController extends Controller
     public function getMessage()
     {
         $level = 'primary';
+        $message = '';
+        $type = '';
         if (session('success')) {
             $level = 'success';
         }

@@ -45,10 +45,10 @@ class LibBook extends Model
         return $this->hasMany(LibTitle::class, 'book_id');
     }
 
-    public function loc_shelfname()
+    public function loc_shelf()
     {
         // Assuming Publisher model and publisher_id column in books table
-        return $this->belongsTo(LocShelfname::class, 'shelf_number_id');
+        return $this->belongsTo(LocShelf::class, 'shelf_number_id');
     }
     public function lib_publisher()
     {
@@ -96,6 +96,10 @@ class LibBook extends Model
         return $this->belongsToMany(LibAuthor::class, 'lib_authorbook_relationship', 'book_id', 'author_id');
     }
 
+    public function lib_authors()
+    {
+        return $this->hasMany(LibAuthorbookRelationship::class, 'book_id');
+    }
     public static function BooksbyShelfname($shelf_name)
     {
         return self::select(
@@ -145,6 +149,7 @@ class LibBook extends Model
     public static function BookbyId($id)
     {
         return self::select(
+            '*',
             'lib_books.id',
             'lib_titles.book_title as title',
             'lib_titles.book_subtitle as subtitle',

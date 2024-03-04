@@ -1,3 +1,24 @@
+
+Library.Models.System = Backbone.Model.extend({
+    url: '/api/system/',
+    getLanguages: function () {
+        var self = this,
+            baseUrl = self.url;
+        var urlWithMethod = baseUrl + 'getLanguages/';
+
+        // Now, perform a fetch operation
+        return this.fetch({
+            url: urlWithMethod,
+            success: function (response) {
+                return response;
+            },
+            error: function (response) {
+                Utils.sendMessage('toast', 'error', 'Error fetching languages');
+            }
+        });
+    }
+});
+
 Library.Models.Messages = Backbone.Model.extend({
     urlRoot: '/api/messages/',
 
@@ -41,7 +62,6 @@ Library.Models.Messages = Backbone.Model.extend({
 });
 
 
-
 Library.Models.Books = Backbone.Model.extend({
     url: '/api/books/'
 });
@@ -71,7 +91,7 @@ Library.Collections.Books = Backbone.Collection.extend({
                 return response;
             },
             error: function(collection, response, options) {
-                Utils.sendMessage('', 'error', 'Error fetching books by shelf. Shelf: ' + shelfName);
+                Utils.sendMessage('toast', 'error', 'Error fetching books by shelf. Shelf: ' + shelfName);
             }
         });
     },
@@ -88,7 +108,7 @@ Library.Collections.Books = Backbone.Collection.extend({
                 return response;
             },
             error: function(collection, response, options) {
-                Utils.sendMessage('', 'error', 'Error fetching books by shelf. id: ' + id);
+                Utils.sendMessage('toast', 'error', 'Error fetching books by Id. id: ' + id);
             }
         });
     }

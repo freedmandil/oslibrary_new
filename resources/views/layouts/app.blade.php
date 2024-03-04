@@ -49,14 +49,14 @@
 
 <main>
     <div id="alert-container"></div>
-    @include('partials.alert')
     <div id="modal-container"></div>
 
-    <div class="w-100" id="view_container">
-        <div class="bg-light">
+    <div class="w-100" id="view_container"></div>
+    <div class="w-100" id="edit_container"></div>
+    <div class="w-100" id="delete_container"></div>
+    <div class="bg-light">
             @yield('content')
         </div>
-    </div>
 </main>
 
 <footer>

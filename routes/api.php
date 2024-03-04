@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\MessagesController;
-
+use App\Http\Controllers\AuthorController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,8 +20,14 @@ use App\Http\Controllers\MessagesController;
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::get('/books/{method}/{param?}', [BookController::class, 'handle']);
-Route::get('/system/{method}/{param?}', [SystemController::class, 'handle']);
+Route::middleware(['auth.api'])->group(function () {
+    // Routes that require authentication
+    Route::get('/books/ByShelfname/{shelfName}', [BookController::class, 'booksByShelfName'])->name('books.byShelfName');
+    Route::get('/books/ByID/{id}', [BookController::class, 'bookByID'])->name('books.byID');
+    Route::get('/books/{method}/{param?}', [BookController::class, 'handle']);
+    Route::post('/books/{method}/{param?}', [BookController::class, 'handle']);
+    Route::get('/system/{method}/{param?}', [SystemController::class, 'handle']);
+
+});
 Route::post('/messages/{method}/{param?}', [MessagesController::class, 'handle']);
 Route::get('/messages/{method}/{param?}', [MessagesController::class, 'handle']);
-
