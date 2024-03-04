@@ -24,7 +24,7 @@ class AuthenticateApi
 
         // Check if the current route is in the list of allowed routes
         if (!$request->user() && !in_array($request->route()->getName(), $allowedRoutes)) {
-            return response()->json(['type'=>'toast','level'=>'error','message' => 'Unauthorized. Please log in.'], 401);
+            return response()->json(['type'=>'modal','level'=>'error','message' => 'Unauthorized. Please log in.'], 401);
         }
 
         return $next($request);

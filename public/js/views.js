@@ -143,7 +143,7 @@ Library.BooksGridView = Backbone.View.extend({
         'click .delete-book': 'deleteBook'
     },
     initialize: function() {
-
+        let gridApi;
         var columnDefs = Object.keys(columnTitleMap).map(key => {
             let field = (key === 'topic' || key === 'publisher' || key === 'assignment') ? key + '_' + userLanguage : key;
             return {

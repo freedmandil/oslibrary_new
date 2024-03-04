@@ -29,7 +29,7 @@ Library.BooksGridView = Backbone.View.extend({
     },
     initialize: function() {
         let gridApi;
-        var columnDefs = Object.k   eys(columnTitleMap).map(key => {
+        var columnDefs = Object.keys(columnTitleMap).map(key => {
             let field = (key === 'topic' || key === 'publisher' || key === 'assignment') ? key + '_' + userLanguage : key;
             return {
                 field: field,
