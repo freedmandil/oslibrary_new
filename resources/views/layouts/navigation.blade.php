@@ -20,6 +20,7 @@
                 </li>
 
                 <!-- Login Dropdown -->
+                @if(in_array(request()->ip(),config('app.allowed_ips')))
                 <li class="nav-item dropdown">
                     @php if (Auth::check()) { @endphp
                         <li class="nav-item">
@@ -66,6 +67,7 @@
                     @php } @endphp
 
                 </li>
+                @endif
 
             </ul>
         </div>

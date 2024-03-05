@@ -1,4 +1,5 @@
 <?php
+require __DIR__.'/auth.php';
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
@@ -30,18 +31,22 @@ Route::get('colors.css', function () {
 Route::get('/', function () {
     return view('home');
 });
-
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/home', function () {
+    return view('home');
+});
 Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 // Route to show registration form
-Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register.show');
+Route::middleware(['restrictByIP'])->group(function () {
+    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register.show');
 // Route to handle registration form submission
-Route::post('/register', [RegisterController::class, 'register'])->name('register');
-Route::resource('users', UserController::class);
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/register', [RegisterController::class, 'register'])->name('register');
+    Route::resource('users', UserController::class);
+});
+
+Route::middleware(['auth', 'restrictByIP'])->group(function () {
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 
 
-require __DIR__.'/auth.php';
+

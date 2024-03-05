@@ -28,6 +28,7 @@ class Kernel extends HttpKernel
         'auth.api' => \App\Http\Middleware\AuthenticateApi::class,
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth:sanctum' => \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        'restrictByIP' => \App\Http\Middleware\RestrictByIP::class,
     ];
 
     /**
@@ -43,6 +44,8 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\RestrictByIP::class,
+
         ],
 
         'api' => [

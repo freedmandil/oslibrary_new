@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'OS Library System'),
 
     /*
     |--------------------------------------------------------------------------
@@ -55,11 +55,11 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'http://library.ohr.edu'),
 
-    'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
+    'frontend_url' => env('FRONTEND_URL', 'http://library.ohr.edu'),
 
-    'frontend_url' => env('FRONTEND_URL', 'http://localhost:3000'),
+    'frontend_url' => env('FRONTEND_URL', 'http://library.ohr.edu'),
 
     'asset_url' => env('ASSET_URL'),
 
@@ -172,7 +172,9 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\HelperServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        App\Providers\ViewServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
     ])->toArray(),
 
     /*
@@ -190,4 +192,13 @@ return [
         // 'Example' => App\Facades\Example::class,
     ])->toArray(),
 
+    /*
+     * Allowed Ips for restricting access
+     */
+    'allowed_ips' => [
+        '213.151.48.47',
+        '10.0.0.32',
+        '89.237.85.214',
+        '127.0.0.1' // for local testing
+    ],
 ];

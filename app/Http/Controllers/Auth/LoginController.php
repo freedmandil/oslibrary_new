@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
+use Closure;
+use Illuminate\Support\Facades\Response;
+
 class LoginController extends Controller
 {
     /*
@@ -40,7 +43,6 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         $page_title = 'Login';
-
         // Pass the countries and categories to your view
         return view('auth.login', compact('page_title'));
     }
