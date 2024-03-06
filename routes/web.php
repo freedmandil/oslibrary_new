@@ -37,14 +37,14 @@ Route::get('/home', function () {
 Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 // Route to show registration form
-Route::middleware(['restrictByIP'])->group(function () {
+Route::middleware(['web', 'restrictByIP'])->group(function () {
     Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register.show');
 // Route to handle registration form submission
     Route::post('/register', [RegisterController::class, 'register'])->name('register');
     Route::resource('users', UserController::class);
 });
 
-Route::middleware(['auth', 'restrictByIP'])->group(function () {
+Route::middleware(['web', 'auth', 'restrictByIP'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 });
 

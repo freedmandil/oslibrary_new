@@ -14,7 +14,6 @@ class DashboardController extends Controller
     {
         $user = Auth::user(); // Retrieve the currently authenticated user
         $usr_cat = $user->usr_cat; // Access the user's profile
-        $books = LibBook::all(); // Retrieve all books
         $books = LibBook::with(['lib_author', 'lib_titles', 'lib_publisher', 'tax_subcategory', 'tax_category', 'tax_topic', 'tax_group', 'sys_language', 'loc_assignment', 'loc_assignment.loc_location'])->get();
         $shelfnumbers = LocShelf::pluck('name', 'id');
 

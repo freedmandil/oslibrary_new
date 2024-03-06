@@ -22,7 +22,7 @@
                 <!-- Login Dropdown -->
                 @if(in_array(request()->ip(),config('app.allowed_ips')))
                 <li class="nav-item dropdown">
-                    @php if (Auth::check()) { @endphp
+                    @if(Auth::check())
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('dashboard') }}">Dashboard</a>
                         </li>
@@ -32,7 +32,7 @@
                                 <button class="nav-link" type="submit">Logout</button>
                             </form>
                         </li>
-                    @php } else { @endphp
+                    @else
                         <!-- Register -->
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('register') }}">Register</a>
@@ -64,8 +64,7 @@
                             </div>
                         </li>
                     </ul>
-                    @php } @endphp
-
+                    @endif
                 </li>
                 @endif
 
