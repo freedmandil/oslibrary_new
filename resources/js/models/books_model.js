@@ -101,6 +101,31 @@ Library.Collections.Books = Backbone.Collection.extend({
             }
         });
     },
+    validateSeferNumber: function(seferNumber, shelfId, BookId = null) {
+        var url = '/api/books/validateSeferNumber';
+        var data = {
+            sefer_number: seferNumber,
+            shelf_id: shelfId,
+        };
+
+        // Include bookId in the request if it exists
+        if (bookId) {
+            data.book_id = bookId;
+        }
+
+        return Backbone.sync('fetch', this, {
+            url: url,
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success: function(model, response, options) {
+              return response.success ? true : false;
+            },
+            error: function(model, response, options) {
+                var error = response.responseJSON;
+                return error ? error.message ?? null : false;
+            }
+        });
+    },
 
     UpdateBook: function(bookId, bookData) {
         var self = this;

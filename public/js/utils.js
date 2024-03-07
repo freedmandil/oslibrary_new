@@ -194,9 +194,6 @@ Utils.sendMessage = function (type, level, message, status) {
   // Call the renderMessage function with the message options
   renderMessage(messageOptions);
   Utils.hideSpinner();
-  if (status && status == 401) {
-    window.location.href = '/logout';
-  }
 };
 Utils.sendSysMessage = function (type, level, message) {
   sendtype = type ? type : 'modal';

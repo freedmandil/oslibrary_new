@@ -5,8 +5,8 @@ const columnTitleMap = {
     author: { en: "Author", he: "מחבר" },
     volume: { en: "Vol.", he: "חלק" },
     volume_name: { en: "Vol. Name", he: "מסכתא" },
-    shelfNumber: { en: "Shelf Number", he: "מספר תא" },
-    seferNumber: { en: "Sefer Number", he: "מספר ספר" },
+    shelf_name: { en: "Shelf Number", he: "מספר תא" },
+    sefer_number: { en: "Sefer Number", he: "מספר ספר" },
     BookRef: { en: "Book Reference", he: "מספר יסודי" },
     barcode: { en: "Barcode", he: "ברקוד" },
     edition: { en: "Edition", he: "מדורה" },
@@ -295,7 +295,7 @@ Library.BookView = Backbone.View.extend({
                                     <h5>Classification & Publication</h5>
                                     <p><strong>Topic:</strong> ${bookData.language_code === 'he' ? Utils.formatValue(bookData.topic_he) : Utils.formatValue(bookData.topic_en)}</p>
                                     <p><strong>Publisher:</strong>   ${bookData.language_code === 'he' ? Utils.formatValue(bookData.publisher_he) : Utils.formatValue(bookData.publisher_en)}</p>
-                                    <p><strong>Shelf Number:</strong> ${Utils.formatValue(bookData.shelfNumber)}&nbsp;|&nbsp;<strong>Book Number:</strong> ${Utils.formatValue(bookData.seferNumber)}</p>
+                                    <p><strong>Shelf Number:</strong> ${Utils.formatValue(bookData.shelf_name)}&nbsp;|&nbsp;<strong>Book Number:</strong> ${Utils.formatValue(bookData.sefer_number)}</p>
                                     <p><strong>Location:</strong> <span class="p-2 sys_${bookData.color_name}"> ${userLanguage === 'he' ? Utils.formatValue(bookData.assignment_he) : Utils.formatValue(bookData.assignment_en)}</p></span>
                                     <p><strong>Barcode:</strong> ${Utils.formatValue(bookData.barcode)}</p>
                                 </div>
@@ -326,7 +326,7 @@ Library.BookView = Backbone.View.extend({
                                     <h5>סיווג והוצאת ספרים</h5>
                                     <p><strong>עניין:</strong> ${bookData.language_code === 'he' ? Utils.formatValue(bookData.topic_he) : Utils.formatValue(bookData.topic_he)}</p>
                                     <p><strong>מוציא לאור:</strong>   ${bookData.language_code === 'he' ? Utils.formatValue(bookData.publisher_he) : Utils.formatValue(bookData.publisher_he)}</p>
-                                    <p><strong>מספר תא:</strong> ${Utils.formatValue(bookData.shelfNumber)} &nbsp;|&nbsp;<strong>מספר ספר:</strong> ${Utils.formatValue(bookData.seferNumber)}</p>
+                                    <p><strong>מספר תא:</strong> ${Utils.formatValue(bookData.shelf_name)} &nbsp;|&nbsp;<strong>מספר ספר:</strong> ${Utils.formatValue(bookData.sefer_number)}</p>
                                     <p><strong>אתר:</strong> <span class="p-2 sys_${bookData.color_name}"> ${bookData.language_code === 'he' ? Utils.formatValue(bookData.assignment_he) : Utils.formatValue(bookData.assignment_he)}</p></span>
                                     <p><strong>ברקוד:</strong> ${Utils.formatValue(bookData.barcode)}</p>
                                 </div>
@@ -343,10 +343,11 @@ Library.BookView = Backbone.View.extend({
 });
 
 Library.EditBookView = Backbone.View.extend({
-    el: '#edit_container', // Ensure you have a corresponding container in your HTML
+    el: '#edit_container',
     events: {
         'click #saveBook': 'saveBook',
-        // You might want additional events for validation or dynamic form changes
+        'change #editSeferNumber': 'validateSeferNumber',
+        'change #editShelf': 'validateSeferNumber'
     },
 
     initialize: function(options) {
@@ -362,7 +363,7 @@ Library.EditBookView = Backbone.View.extend({
         // Note: Ensure you handle the possibility of null or undefined values in bookData
         return `
             <div class="modal fade" id="editBookModal" tabindex="-1" aria-labelledby="editBook" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h1 class="modal-title fs-5" id="editBookTitle">Edit Book Details</h1>
@@ -395,6 +396,7 @@ Library.EditBookView = Backbone.View.extend({
             var bookData = booksCollection.BookbyId(bookId).done(function(response) {
             var bookData = response;
             var System = new Library.Models.System();
+            var Locations = new Library.Models.Locations();
 
 
 
@@ -405,6 +407,15 @@ Library.EditBookView = Backbone.View.extend({
                         <div class="col-md-6">
                             <h5>General Details</h5>
                             <p><strong>BookID:</strong> ${Utils.formatValue(bookData.id)}  ${bookData.BookRef ? '<strong>Book Ref.:</strong>' + bookData.BookRef : ''}</p>
+                            <div class="mb-3">
+                                <label for="editSeferNumber" class="form-label">Book Number</label>
+                                <input type="number" class="form-control" id="editSeferNumber" value="${Utils.formatValue(bookData.sefer_number)}">
+                                <span id="seferNumberValidation" class="text-danger"></span>
+                                  <label for="editShelf" class="form-label">Shelf</label>
+                                  <select class="dropdown ui" id="editShelf">
+                                    ${ShelvesSelect}
+                                  </select>
+                            </div>
                             <div class="mb-3">
                                 <label for="editTitle" class="form-label">Title</label>
                                 <input type="text" class="form-control ${(bookData.language_code === 'he') ? 'rtl' : 'ltr'}" id="editTitle" value="${Utils.formatValue(bookData.title)}">
@@ -447,6 +458,9 @@ Library.EditBookView = Backbone.View.extend({
                         <div class="col-md-6">
                             <h5>Classification & Publication</h5>
                             <div class="mb-3">
+                              &nbsp;
+                            </div>
+                            <div class="mb-3">
                                 <label for="editPublisher" class="form-label">Publisher</label>
                                 <input type="text" class="form-control" id="editPublisher" value="${Utils.formatValue(bookData.publisher)}">
                             </div>
@@ -483,6 +497,18 @@ Library.EditBookView = Backbone.View.extend({
                     });
                     $('#editLanguage').append(LanguagesSelect);
                 });
+                var Shelves = [];
+                var ShelvesSelect = '';
+                Locations.getShelves().done(function(response) {
+                    Shelves = response.map(function(shelf) {
+                        var selected = (bookData.shelf_number_id === shelf.id) ? ' selected ' : '';
+                        return `<option value="${shelf.id}" ${selected} >${shelf.name}</option>`;
+                    });
+                    Shelves.forEach(function(shelf) {
+                        ShelvesSelect += shelf;
+                    });
+                    $('#editShelf').append(ShelvesSelect);
+                });
                 $('.dropdown').dropdown();
                 Utils.hideSpinner();
                 editModal.show();
@@ -509,5 +535,21 @@ Library.EditBookView = Backbone.View.extend({
                 }
             });
         }
+    },
+    validateSeferNumber: function(bookId = null) {
+        var seferNumberValidation = $('#seferNumberValidation');
+        var seferNumber = this.$('#editSeferNumber').val();
+        var shelfId = this.$('#editShelf').val();
+
+        this.model.validateSeferNumber(seferNumber, shelfId, bookId).then(
+            function(response) {
+                $('#editSeferNumber').data('valid', true); // Setting data attribute to true
+                seferNumberValidation.removeClass('text-danger').addClass('text-success sm-2').html('<i class="bi bi-check-circle-fill"></i>');
+            },
+            function(error) {
+                $('#editSeferNumber').data('valid', false); // Setting data attribute to false
+                seferNumberValidation.removeClass('text-success').addClass('text-danger sm-2').html('<i class="bi bi-exclamation-circle-fill"></i> ' + error);
+            }
+        );
     }
 });

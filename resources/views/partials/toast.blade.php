@@ -6,9 +6,9 @@
                 $toastType = session('error') ? 'error' :
                              (session('warning') ? 'warning' :
                              (session('status') ? 'status' : 'info'));
-                $bgColor = $toastType === 'error' ? 'bg-danger text-light' :
-                           ($toastType === 'warning' ? 'bg-light text-dark' :
-                           ($toastType === 'status' ? 'bg-light text-dark' :
+                $bgColor = $toastType === 'error' ? '-danger text-light' :
+                           ($toastType === 'warning' ? '-warning text-dark' :
+                           ($toastType === 'status' ? '-success text-light' :
                            'bg-info text-light'));
                 $borderColor = $toastType === 'error' ? 'border-danger' :
                                ($toastType === 'warning' ? 'border-warning' :
@@ -18,12 +18,12 @@
         @endphp
 
         <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11">
-            <div id="liveToast" class="toast {{ $bgColor }} {{ $borderColor }} border-2" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="toast-header {{ $bgColor }} {{ $borderColor }}">
+            <div id="liveToast" class="toast bg{{ $bgColor }} {{ $borderColor }} border-2" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header bg{{ $bgColor }} {{ $borderColor }}">
                     <strong class="me-auto">{{$toastTitle}}</strong>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
-                <div class="toast-body fw-bold">
+                <div class="toast-body fw-bold bg{{ $bgColor }}">
                     {{ $message }}
                 </div>
             </div>

@@ -30,7 +30,7 @@
 
     </head>
     <body>
-
+    @csrf
     @include('partials.toast')
     <div class="spinner-overlay hide flex-column align-items-center">
         <div class="spinner-border text-primary" role="status"></div>

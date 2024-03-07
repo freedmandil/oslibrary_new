@@ -26,7 +26,10 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
 
         // Regenerate the session to prevent session fixation attacks.
-
+        if (!Auth::check()) {
+            // Log this situation or handle it; this means authentication did not persist as expected.
+            return redirect()->intended('/')->with('error', 'Authentication Failed.'); //
+        }
         // After successful authentication, check if the user is indeed authenticated.
         if (Auth::check()) {
             $user = Auth::user()->load('usr_cat','sys_country','sys_state','sys_language'); // Retrieve the currently authenticated user
@@ -56,9 +59,8 @@ class AuthenticatedSessionController extends Controller
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
+        $request->session()->regenerateToken(); // Regenerate session token
 
-        $request->session()->regenerateToken();
-
-        return redirect()->intended('/')->with('status', 'You have successfully logged out.');;
+        return redirect()->intended('home')->with('status', 'You have successfully logged out.');
     }
 }

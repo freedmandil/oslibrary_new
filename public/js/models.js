@@ -61,6 +61,26 @@ Library.Models.Messages = Backbone.Model.extend({
     }
 });
 
+Library.Models.Locations = Backbone.Model.extend({
+    url: '/api/locations/',
+    getShelves: function () {
+        var self = this,
+            baseUrl = self.url;
+        var urlWithMethod = baseUrl + 'getShelves/';
+
+        // Now, perform a fetch operation
+        return this.fetch({
+            url: urlWithMethod,
+            success: function (response) {
+                return response;
+            },
+            error: function (response) {
+                Utils.sendMessage('toast', 'error', 'Error fetching shelves');
+            }
+        });
+    }
+});
+
 
 Library.Models.Books = Backbone.Model.extend({
     url: '/api/books/'
@@ -93,7 +113,6 @@ Library.Collections.Books = Backbone.Collection.extend({
             error: function(collection, response, options) {
                 error = response.responseJSON;
                 Utils.sendMessage(error.type, error.level, error.message, response.status);
-
             }
         });
     },
@@ -125,7 +144,7 @@ Library.Collections.Books = Backbone.Collection.extend({
                 return response;
             },
             error: function(collection, response, options) {
-                Utils.sendMessage('toast', 'error', 'Error fetching authors.');
+                Utils.sendMessage(error.type, error.level, error.message, response.status);
             }
         });
     },
@@ -143,7 +162,8 @@ Library.Collections.Books = Backbone.Collection.extend({
             },
             error: function(model, response, options) {
                 error = response.responseJSON;
-                Utils.sendMessage(error.type, error.level, error.message);            }
+                Utils.sendMessage(error.type, error.level, error.message, response.status);
+            }
         });
     },
 
@@ -160,7 +180,33 @@ Library.Collections.Books = Backbone.Collection.extend({
             },
             error: function(model, response, options) {
                 error = response.responseJSON;
-                Utils.sendMessage(error.type, error.level, error.message);            }
+                Utils.sendMessage(error.type, error.level, error.message, response.status);
+            }
+        });
+    },
+    validateSeferNumber: function(seferNumber, shelfId, BookId = null) {
+        var url = '/api/books/validateSeferNumber';
+        var data = {
+            sefer_number: seferNumber,
+            shelf_id: shelfId,
+        };
+
+        // Include bookId in the request if it exists
+        if (bookId) {
+            data.book_id = bookId;
+        }
+
+        return Backbone.sync('fetch', this, {
+            url: url,
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            success: function(model, response, options) {
+              return response.success ? true : false;
+            },
+            error: function(model, response, options) {
+                var error = response.responseJSON;
+                return error ? error.message ?? null : false;
+            }
         });
     },
 
@@ -177,7 +223,8 @@ Library.Collections.Books = Backbone.Collection.extend({
             },
             error: function(model, response, options) {
                 error = response.responseJSON;
-                Utils.sendMessage(error.type, error.level, error.message);            }
+                Utils.sendMessage(error.type, error.level, error.message, response.status);
+            }
         });
     },
 
@@ -194,7 +241,135 @@ Library.Collections.Books = Backbone.Collection.extend({
             },
             error: function(model, response, options) {
                 error = response.responseJSON;
-                Utils.sendMessage(error.type, error.level, error.message);            }
+                Utils.sendMessage(error.type, error.level, error.message, response.status);
+            }
         });
-    }
+    },
+
+    AddTitle: function(titleData) {
+        var url = '/api/titles/addBookTitle';
+        return Backbone.sync('create', this, {
+            url: url,
+            data: JSON.stringify(titleData),
+            contentType: 'application/json',
+            success: function(model, response, options) {
+                return response;
+            },
+            error: function(model, response, options) {
+                var error = response.responseJSON;
+                Utils.sendMessage(error.type, error.level, error.message, response.status);
+            }
+        });
+    },
+
+    UpdateTitle: function(titleId, titleData) {
+        var url = '/api/titles/updateBookTitle' + titleId;
+        return Backbone.sync('update', this, {
+            url: url,
+            data: JSON.stringify(titleData),
+            contentType: 'application/json',
+            success: function(model, response, options) {
+                return response;
+            },
+            error: function(model, response, options) {
+                var error = response.responseJSON;
+                Utils.sendMessage(error.type, error.level, error.message, response.status);
+            }
+        });
+    },
+    AddTopic: function(topicData) {
+        var url = '/api/topics/createTopic';
+        return Backbone.sync('create', this, {
+            url: url,
+            data: JSON.stringify(topicData),
+            contentType: 'application/json',
+            success: function(model, response, options) {
+                return response;
+            },
+            error: function(model, response, options) {
+                var error = response.responseJSON;
+                Utils.sendMessage(error.type, error.level, error.message, response.status);
+            }
+        });
+    },
+
+    UpdateTopic: function(topicId, topicData) {
+        var url = '/api/topics/updateTopic' + topicId;
+        return Backbone.sync('update', this, {
+            url: url,
+            data: JSON.stringify(topicData),
+            contentType: 'application/json',
+            success: function(model, response, options) {
+                return response;
+            },
+            error: function(model, response, options) {
+                var error = response.responseJSON;
+                Utils.sendMessage(error.type, error.level, error.message, response.status);
+            }
+        });
+    },
+
+    AddPublisher: function(publisherData) {
+        var url = '/api/publishers/createPublisher';
+        return Backbone.sync('create', this, {
+            url: url,
+            data: JSON.stringify(publisherData),
+            contentType: 'application/json',
+            success: function(model, response, options) {
+                return response;
+            },
+            error: function(model, response, options) {
+                var error = response.responseJSON;
+                Utils.sendMessage(error.type, error.level, error.message, response.status);
+            }
+        });
+    },
+
+    UpdatePublisher: function(publisherId, publisherData) {
+        var url = '/api/publishers/updatePublisher' + publisherId;
+        return Backbone.sync('update', this, {
+            url: url,
+            data: JSON.stringify(publisherData),
+            contentType: 'application/json',
+            success: function(model, response, options) {
+                return response;
+            },
+            error: function(model, response, options) {
+                var error = response.responseJSON;
+                Utils.sendMessage(error.type, error.level, error.message, response.status);
+            }
+        });
+    },
+
+    AddShelf: function(shelfData) {
+        var url = '/api/shelf/createShelf';
+        return Backbone.sync('create', this, {
+            url: url,
+            data: JSON.stringify(shelfData),
+            contentType: 'application/json',
+            success: function(model, response, options) {
+                return response;
+            },
+            error: function(model, response, options) {
+                var error = response.responseJSON;
+                Utils.sendMessage(error.type, error.level, error.message, response.status);
+            }
+        });
+    },
+
+    UpdateShelf: function(shelfId, shelfData) {
+        var url = '/api/shelf/updateShelf' + shelfId;
+        return Backbone.sync('update', this, {
+            url: url,
+            data: JSON.stringify(shelfData),
+            contentType: 'application/json',
+            success: function(model, response, options) {
+                return response;
+            },
+            error: function(model, response, options) {
+                var error = response.responseJSON;
+                Utils.sendMessage(error.type, error.level, error.message, response.status);
+            }
+        });
+    },
 });
