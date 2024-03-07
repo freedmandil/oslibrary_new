@@ -407,14 +407,19 @@ Library.EditBookView = Backbone.View.extend({
                         <div class="col-md-6">
                             <h5>General Details</h5>
                             <p><strong>BookID:</strong> ${Utils.formatValue(bookData.id)}  ${bookData.BookRef ? '<strong>Book Ref.:</strong>' + bookData.BookRef : ''}</p>
+                            <input type="hidden" id="bookId" value="${Utils.formatValue(bookData.id)}">
                             <div class="mb-3">
-                                <label for="editSeferNumber" class="form-label">Book Number</label>
+                            <div>
+                                <span><label for="editSeferNumber" class="form-label">Book Number</label>
                                 <input type="number" class="form-control" id="editSeferNumber" value="${Utils.formatValue(bookData.sefer_number)}">
-                                <span id="seferNumberValidation" class="text-danger"></span>
+                                <div id="seferNumberValidation" class="text-danger"></div></span>
+                                <span>
                                   <label for="editShelf" class="form-label">Shelf</label>
                                   <select class="dropdown ui" id="editShelf">
                                     ${ShelvesSelect}
                                   </select>
+                                  </span>
+                                  </div>
                             </div>
                             <div class="mb-3">
                                 <label for="editTitle" class="form-label">Title</label>
@@ -537,18 +542,18 @@ Library.EditBookView = Backbone.View.extend({
         }
     },
     validateSeferNumber: function(bookId = null) {
-        var seferNumberValidation = $('#seferNumberValidation');
         var seferNumber = this.$('#editSeferNumber').val();
         var shelfId = this.$('#editShelf').val();
+        var bookId = this.$('#bookId').val();
 
-        this.model.validateSeferNumber(seferNumber, shelfId, bookId).then(
+        this.booksCollection.validateSeferNumber(seferNumber, shelfId, bookId).then(
             function(response) {
                 $('#editSeferNumber').data('valid', true); // Setting data attribute to true
-                seferNumberValidation.removeClass('text-danger').addClass('text-success sm-2').html('<i class="bi bi-check-circle-fill"></i>');
+                $('#seferNumberValidation').removeClass('text-danger').addClass('text-success sm-2').html('<i class="bi bi-check-circle-fill"></i>');
             },
             function(error) {
                 $('#editSeferNumber').data('valid', false); // Setting data attribute to false
-                seferNumberValidation.removeClass('text-success').addClass('text-danger sm-2').html('<i class="bi bi-exclamation-circle-fill"></i> ' + error);
+                $('#seferNumberValidation').removeClass('text-success').addClass('text-danger sm-2').html('<i class="bi bi-exclamation-circle-fill"></i> ' + error);
             }
         );
     }

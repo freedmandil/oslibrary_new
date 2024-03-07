@@ -140,6 +140,28 @@ class BookController extends Controller
         }
     }
 
+    public function validateSeferNumber($shelfId, $seferNumber, $bookId = null)
+    {
+        // Start the query to check for the existence of the seferNumber on the specified shelf
+        $query = LibBook::where('shelf_number_id', $shelfId)
+            ->where('sefer_number', $seferNumber);
+
+        // If a bookId is provided, exclude it from the check (useful for updates)
+        if ($bookId !== null) {
+            $query = $query->where('id', '!=', $bookId);
+        }
+
+        // Execute the query to determine if the seferNumber already exists on the shelf
+        $exists = $query->exists();
+
+        // Return a JSON response based on whether the seferNumber exists
+        if (!$exists) {
+            return response()->json(['success' => true], 200);
+        } else {
+            return response()->json(['level'=>'error','message' => 'Sefer number already in use on this shelf.'], 400);
+        }
+    }
+
     public function getNewBookRefNumber()
     {
         // Get the latest BookRef number

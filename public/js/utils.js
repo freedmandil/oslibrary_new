@@ -1,6 +1,19 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./resources/css/app.css":
+/*!*******************************!*\
+  !*** ./resources/css/app.css ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
 /***/ "./resources/sass/app.scss":
 /*!*********************************!*\
   !*** ./resources/sass/app.scss ***!
@@ -53,10 +66,10 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/css/app.css":
-/*!*******************************!*\
-  !*** ./resources/css/app.css ***!
-  \*******************************/
+/***/ "./node_modules/bootstrap-icons/font/bootstrap-icons.scss":
+/*!****************************************************************!*\
+  !*** ./node_modules/bootstrap-icons/font/bootstrap-icons.scss ***!
+  \****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -299,6 +312,7 @@ Utils.formatValue = function (value) {
 /******/ 		var installedChunks = {
 /******/ 			"/js/utils": 0,
 /******/ 			"css/app": 0,
+/******/ 			"css/bootstrap-icons": 0,
 /******/ 			"css/bootstrap": 0,
 /******/ 			"css/bootstrap-utilities": 0,
 /******/ 			"css/bootstrap-grid": 0
@@ -351,12 +365,13 @@ Utils.formatValue = function (value) {
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	__webpack_require__.O(undefined, ["css/app","css/bootstrap","css/bootstrap-utilities","css/bootstrap-grid"], () => (__webpack_require__("./resources/js/utils.js")))
-/******/ 	__webpack_require__.O(undefined, ["css/app","css/bootstrap","css/bootstrap-utilities","css/bootstrap-grid"], () => (__webpack_require__("./resources/sass/app.scss")))
-/******/ 	__webpack_require__.O(undefined, ["css/app","css/bootstrap","css/bootstrap-utilities","css/bootstrap-grid"], () => (__webpack_require__("./node_modules/bootstrap/scss/bootstrap-grid.scss")))
-/******/ 	__webpack_require__.O(undefined, ["css/app","css/bootstrap","css/bootstrap-utilities","css/bootstrap-grid"], () => (__webpack_require__("./node_modules/bootstrap/scss/bootstrap-utilities.scss")))
-/******/ 	__webpack_require__.O(undefined, ["css/app","css/bootstrap","css/bootstrap-utilities","css/bootstrap-grid"], () => (__webpack_require__("./node_modules/bootstrap/scss/bootstrap.scss")))
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app","css/bootstrap","css/bootstrap-utilities","css/bootstrap-grid"], () => (__webpack_require__("./resources/css/app.css")))
+/******/ 	__webpack_require__.O(undefined, ["css/app","css/bootstrap-icons","css/bootstrap","css/bootstrap-utilities","css/bootstrap-grid"], () => (__webpack_require__("./resources/js/utils.js")))
+/******/ 	__webpack_require__.O(undefined, ["css/app","css/bootstrap-icons","css/bootstrap","css/bootstrap-utilities","css/bootstrap-grid"], () => (__webpack_require__("./resources/sass/app.scss")))
+/******/ 	__webpack_require__.O(undefined, ["css/app","css/bootstrap-icons","css/bootstrap","css/bootstrap-utilities","css/bootstrap-grid"], () => (__webpack_require__("./node_modules/bootstrap/scss/bootstrap-grid.scss")))
+/******/ 	__webpack_require__.O(undefined, ["css/app","css/bootstrap-icons","css/bootstrap","css/bootstrap-utilities","css/bootstrap-grid"], () => (__webpack_require__("./node_modules/bootstrap/scss/bootstrap-utilities.scss")))
+/******/ 	__webpack_require__.O(undefined, ["css/app","css/bootstrap-icons","css/bootstrap","css/bootstrap-utilities","css/bootstrap-grid"], () => (__webpack_require__("./node_modules/bootstrap/scss/bootstrap.scss")))
+/******/ 	__webpack_require__.O(undefined, ["css/app","css/bootstrap-icons","css/bootstrap","css/bootstrap-utilities","css/bootstrap-grid"], () => (__webpack_require__("./node_modules/bootstrap-icons/font/bootstrap-icons.scss")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app","css/bootstrap-icons","css/bootstrap","css/bootstrap-utilities","css/bootstrap-grid"], () => (__webpack_require__("./resources/css/app.css")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

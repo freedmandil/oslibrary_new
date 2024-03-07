@@ -30,6 +30,7 @@ mix.sass('resources/sass/app.scss', 'public/css');
 mix.sass('node_modules/bootstrap/scss/bootstrap-grid.scss', 'public/css');
 mix.sass('node_modules/bootstrap/scss/bootstrap-utilities.scss', 'public/css');
 mix.sass('node_modules/bootstrap/scss/bootstrap.scss', 'public/css');
+mix.sass('node_modules/bootstrap-icons/font/bootstrap-icons.scss', 'public/css');
 
 
 // Compile app.css and styles.css
@@ -82,3 +83,6 @@ mix.copy('node_modules/fomantic-ui/dist/themes/default/assets/fonts/brand-icons.
 mix.copy('node_modules/fomantic-ui/dist/themes/default/assets/fonts/brand-icons.woff2', './public/css/themes/default/assets/fonts');
 mix.copy('node_modules/fomantic-ui/dist/themes/default/assets/fonts/outline-icons.woff', './public/css/themes/default/assets/fonts');
 mix.copy('node_modules/fomantic-ui/dist/themes/default/assets/fonts/outline-icons.woff2', './public/css/themes/default/assets/fonts');
+mix.copy('node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff', './public/css/fonts');
+mix.copy('node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2', './public/css/fonts');
+

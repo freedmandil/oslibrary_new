@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
+use Illuminate\Http\RedirectResponse;
 
 class Handler extends ExceptionHandler
 {
@@ -27,4 +28,12 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+//    public function render($request, $e)
+//    {
+//        if ($e instanceof \Illuminate\Session\TokenMismatchException) {
+//            return redirect()->route('login')->with('warning', 'Token Mismatch. Please try again.');
+//        }
+//      return redirect()->route('login')->with('danger', 'There was an error. Please try again.<br>Error: '.var_export($request->error, true));
+//    }
 }

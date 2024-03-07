@@ -6,7 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\BookController;
+use App\Http\Controllers\UserController;
 
 use App\Models\SysColor;
 /*

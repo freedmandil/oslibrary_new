@@ -61,20 +61,21 @@ Library.Models.Messages = Backbone.Model.extend({
     }
 });
 
+
 Library.Models.Locations = Backbone.Model.extend({
     url: '/api/locations/',
     getShelves: function () {
-        var self = this,
+        let self = this,
             baseUrl = self.url;
-        var urlWithMethod = baseUrl + 'getShelves/';
+        let urlWithMethod = baseUrl + 'getShelves/';
 
         // Now, perform a fetch operation
-        return this.fetch({
+        return self.fetch({
             url: urlWithMethod,
             success: function (response) {
                 return response;
             },
-            error: function (response) {
+            error: function () {
                 Utils.sendMessage('toast', 'error', 'Error fetching shelves');
             }
         });
@@ -184,7 +185,7 @@ Library.Collections.Books = Backbone.Collection.extend({
             }
         });
     },
-    validateSeferNumber: function(seferNumber, shelfId, BookId = null) {
+    validateSeferNumber: function(seferNumber, shelfId, bookId = null) {
         var url = '/api/books/validateSeferNumber';
         var data = {
             sefer_number: seferNumber,
@@ -198,7 +199,7 @@ Library.Collections.Books = Backbone.Collection.extend({
 
         return Backbone.sync('fetch', this, {
             url: url,
-            data: JSON.stringify(data),
+            data: data,
             contentType: 'application/json',
             success: function(model, response, options) {
               return response.success ? true : false;

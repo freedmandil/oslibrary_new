@@ -7,11 +7,20 @@ use App\Models\LocShelf;
 use App\Models\LocLocation;
 use App\Models\LocAssignment;
 
+use App\Models\SysLanguage;
 use Illuminate\Http\Request;
 
 class LocationController extends Controller
 {
-    //
+    public function getShelves()
+    {
+        // Query books with the specified shelf name
+        $shelves = LocShelf::select('*')->orderBy('number')->get();
+
+        return $shelves ? response()->json($shelves) : json(['error'=>true]);
+    }
+
+
     public function createShelf(Request $request)
     {
         // Assuming the whole JSON object matches the LocShelf model's attributes

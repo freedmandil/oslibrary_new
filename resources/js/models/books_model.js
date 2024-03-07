@@ -101,7 +101,7 @@ Library.Collections.Books = Backbone.Collection.extend({
             }
         });
     },
-    validateSeferNumber: function(seferNumber, shelfId, BookId = null) {
+    validateSeferNumber: function(seferNumber, shelfId, bookId = null) {
         var url = '/api/books/validateSeferNumber';
         var data = {
             sefer_number: seferNumber,
@@ -115,7 +115,7 @@ Library.Collections.Books = Backbone.Collection.extend({
 
         return Backbone.sync('fetch', this, {
             url: url,
-            data: JSON.stringify(data),
+            data: data,
             contentType: 'application/json',
             success: function(model, response, options) {
               return response.success ? true : false;

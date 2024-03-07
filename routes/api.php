@@ -6,6 +6,11 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\SystemController;
 use App\Http\Controllers\MessagesController;
 use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\LocationController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\TaxonomyController;
+use App\Http\Controllers\LabelsController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
