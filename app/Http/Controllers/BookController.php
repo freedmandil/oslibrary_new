@@ -140,8 +140,26 @@ class BookController extends Controller
         }
     }
 
-    public function validateSeferNumber($shelfId, $seferNumber, $bookId = null)
+    public function validateSeferNumber(Request $request)
     {
+        $jsonData = $request->json()->all();
+        if (array_key_exists('shelf_id', $jsonData))  {
+            $shelfId = $jsonData['shelf_id'];
+        } else {
+            return response()->json(['error' => 'Shelf ID is required.'], 400);
+        }
+        if (array_key_exists('sefer_number', $jsonData))  {
+            $seferNumber = $jsonData['sefer_number'];
+        } else {
+            return response()->json(['error' => 'Sefer number is required.'], 400);
+        }
+
+        if (array_key_exists('book_id', $jsonData))  {
+            $bookId = $jsonData['book_id'];
+        } else {
+            $bookId = null;
+        }
+
         // Start the query to check for the existence of the seferNumber on the specified shelf
         $query = LibBook::where('shelf_number_id', $shelfId)
             ->where('sefer_number', $seferNumber);
@@ -150,15 +168,15 @@ class BookController extends Controller
         if ($bookId !== null) {
             $query = $query->where('id', '!=', $bookId);
         }
+        error_log($query->toSql().' '.json_encode($query->getBindings()));
 
         // Execute the query to determine if the seferNumber already exists on the shelf
         $exists = $query->exists();
-
         // Return a JSON response based on whether the seferNumber exists
-        if (!$exists) {
-            return response()->json(['success' => true], 200);
+        if ($exists) {
+            return response()->json(['success' => false], 200);
         } else {
-            return response()->json(['level'=>'error','message' => 'Sefer number already in use on this shelf.'], 400);
+            return response()->json(['success' => true], 200);
         }
     }
 

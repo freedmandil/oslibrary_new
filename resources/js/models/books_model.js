@@ -51,9 +51,9 @@ Library.Collections.Books = Backbone.Collection.extend({
         });
     },
 
-    Authors: function() {
+    getAuthors: function() {
         var self = this;
-        var url = '/api/authors/';
+        var url = '/api/authors/getAuthors/';
 
         return Backbone.sync('read', this, {
             url: url,
@@ -115,10 +115,11 @@ Library.Collections.Books = Backbone.Collection.extend({
 
         return Backbone.sync('fetch', this, {
             url: url,
-            data: data,
-            contentType: 'application/json',
+            data: JSON.stringify(data), // Convert data object to JSON string
+            method: 'post',
+            contentType: 'application/json', // Ensure the server knows to expect JSON
             success: function(model, response, options) {
-              return response.success ? true : false;
+                return response.success ? true : false;
             },
             error: function(model, response, options) {
                 var error = response.responseJSON;

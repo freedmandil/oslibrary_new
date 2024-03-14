@@ -18,6 +18,7 @@ mix.js('resources/js/init.js', 'public/js/core.js');
 
 mix.js('resources/js/app.js', 'public/js');
 mix.js('resources/js/forms.js', 'public/js');
+mix.js('node_modules/@popperjs/core/dist/cjs/popper.js', 'public/js/tools.js');
 mix.js('node_modules/fomantic-ui/dist/semantic.js', 'public/js');
 
 
@@ -83,6 +84,6 @@ mix.copy('node_modules/fomantic-ui/dist/themes/default/assets/fonts/brand-icons.
 mix.copy('node_modules/fomantic-ui/dist/themes/default/assets/fonts/brand-icons.woff2', './public/css/themes/default/assets/fonts');
 mix.copy('node_modules/fomantic-ui/dist/themes/default/assets/fonts/outline-icons.woff', './public/css/themes/default/assets/fonts');
 mix.copy('node_modules/fomantic-ui/dist/themes/default/assets/fonts/outline-icons.woff2', './public/css/themes/default/assets/fonts');
-mix.copy('node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff', './public/css/fonts');
-mix.copy('node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2', './public/css/fonts');
+mix.copy('node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff', './public/fonts/vendor/bootstrap-icons/');
+mix.copy('node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2', './public/fonts/vendor/bootstrap-icons/');
 

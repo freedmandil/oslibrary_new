@@ -25,49 +25,38 @@ use App\Http\Controllers\LabelsController;
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
 });
+    Route::middleware('throttle:100,1')->group(function () {
 
-// Routes related to books
-Route::get('/books/{method}/{param?}', [BookController::class, 'handle']);
-Route::post('/books/{method}/{param?}', [BookController::class, 'handle']);
-Route::post('/titles/{method}/{param?}', [BookController::class, 'handle']);
-Route::post('/publishers/{method}/{param?}', [BookController::class, 'handle']);
-Route::get('/titles/{method}/{param?}', [BookController::class, 'handle']);
-Route::get('/publishers/{method}/{param?}', [BookController::class, 'handle']);
+        Route::controller(BookController::class)->group(function () {
+            Route::match(['get', 'post'], '/books/{method}/{param?}', 'handle');
+        });
 
-// Routes related to authors
-Route::post('/authors/{method}/{param?}', [AuthorController::class, 'handle']);
-Route::get('/authors/{method}/{param?}', [AuthorController::class, 'handle']);
+        Route::controller(AuthorController::class)->group(function () {
+            Route::match(['get', 'post'], '/authors/{method}/{param?}', 'handle');
+        });
 
-// Routes related to locations
-Route::post('/shelf/{method}/{param?}', [LocationController::class, 'handle']);
-Route::post('/locations/{method}/{param?}', [LocationController::class, 'handle']);
-Route::post('/assigns/{method}/{param?}', [LocationController::class, 'handle']);
-Route::get('/shelf/{method}/{param?}', [LocationController::class, 'handle']);
-Route::get('/locations/{method}/{param?}', [LocationController::class, 'handle']);
-Route::get('/assigns/{method}/{param?}', [LocationController::class, 'handle']);
+        Route::controller(LocationController::class)->group(function () {
+            Route::match(['get', 'post'], '/locations/{method}/{param?}', 'handle');
+        });
 
-// Routes related to taxonomy
-Route::post('/topics/{method}/{param?}', [TaxonomyController::class, 'handle']);
-Route::post('/groups/{method}/{param?}', [TaxonomyController::class, 'handle']);
-Route::post('/categories/{method}/{param?}', [TaxonomyController::class, 'handle']);
-Route::post('/subcats/{method}/{param?}', [TaxonomyController::class, 'handle']);
-Route::get('/topics/{method}/{param?}', [TaxonomyController::class, 'handle']);
-Route::get('/groups/{method}/{param?}', [TaxonomyController::class, 'handle']);
-Route::get('/categories/{method}/{param?}', [TaxonomyController::class, 'handle']);
-Route::get('/subcats/{method}/{param?}', [TaxonomyController::class, 'handle']);
+        Route::controller(TaxonomyController::class)->group(function () {
+            Route::match(['get', 'post'], '/tax/{method}/{param?}', 'handle');
+        });
 
-// Routes related to users
-Route::post('/users/{method}/{param?}', [UserController::class, 'handle']);
-Route::get('/users/{method}/{param?}', [UserController::class, 'handle']);
+        Route::controller(UserController::class)->group(function () {
+            Route::match(['get', 'post'], '/users/{method}/{param?}', 'handle');
+        });
 
-// Routes related to labels
-Route::post('/labels/{method}/{param?}', [LabelsController::class, 'handle']);
-Route::get('/labels/{method}/{param?}', [LabelsController::class, 'handle']);
+        Route::controller(LabelsController::class)->group(function () {
+            Route::match(['get', 'post'], '/labels/{method}/{param?}', 'handle');
+        });
 
-// Routes related to system
-Route::get('/system/{method}/{param?}', [SystemController::class, 'handle']);
-Route::post('/system/{method}/{param?}', [SystemController::class, 'handle']);
+        Route::controller(SystemController::class)->group(function () {
+            Route::match(['get', 'post'], '/system/{method}/{param?}', 'handle');
+        });
 
-// Routes related to messaging
-Route::post('/messages/{method}/{param?}', [MessagesController::class, 'handle']);
-Route::get('/messages/{method}/{param?}', [MessagesController::class, 'handle']);
+        Route::controller(MessagesController::class)->group(function () {
+            Route::match(['get', 'post'], '/messages/{method}/{param?}', 'handle');
+        });
+
+    });

@@ -7,11 +7,15 @@
 
         <title>@yield('title')</title>
 
-        <link href="{{ mix('/css/all.css') }}" rel="stylesheet">
         <link href="{{ mix('/css/bootstrap.css') }}" rel="stylesheet">
+
     @if (Session::get('user_language') == 'he')
             <link href="{{ mix('/css/bootstrap.rtl.css') }}" rel="stylesheet">
         @endif
+        <link href="{{ mix('/css/bootstrap-grid.css') }}" rel="stylesheet">
+        <link href="{{ mix('/css/bootstrap-icons.css') }}" rel="stylesheet">
+        <link href="{{ mix('/css/bootstrap-utilities.css') }}" rel="stylesheet">
+        <link href="{{ mix('/css/all.css') }}" rel="stylesheet">
         <link href="{{ url('colors.css') }}" rel="stylesheet">
 
         <!-- Fonts -->
@@ -20,6 +24,7 @@
         <script src="//unpkg.com/alpinejs" defer></script>
         <script src="{{ mix('/js/core.js') }}"></script>
         <script src="{{ mix('/js/app.js') }}"></script>
+        <script src="{{ mix('/js/tools.js') }}"></script>
 
         <script src="{{ mix('/js/models.js') }}"></script>
         <script src="{{ mix('/js/views.js') }}"></script>

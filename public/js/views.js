@@ -462,14 +462,15 @@ Library.EditBookView = Backbone.View.extend({
     events: {
         'click #saveBook': 'saveBook',
         'change #editSeferNumber': 'validateSeferNumber',
-        'change #editShelf': 'validateSeferNumber'
+        'change #editShelf': 'validateSeferNumber',
+        'click #refresh_dropdown': 'refreshDropdown',
+        'change #editLanguage': 'refreshAuthors',
     },
-
+    bookData: {},
     initialize: function(options) {
         this.bookId = options.bookId;
         // Assuming booksCollection is available in the scope or passed in options
         this.booksCollection = new Library.Collections.Books();
-
         this.render(this.bookId);
     },
 
@@ -481,7 +482,7 @@ Library.EditBookView = Backbone.View.extend({
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="editBookTitle">Edit Book Details</h1>
+                            <h1 class="modal-title h2" id="editBookTitle">Edit Book Details</h1>
                         </div>
                         <div id="bookEditForm" class="modal-body">
                           <div id="bookContainer">
@@ -498,74 +499,168 @@ Library.EditBookView = Backbone.View.extend({
         `;
     },
 
-    render: function(bookId) {
-        var self = this;
-        if ($('#editBookModal').length > 0) {
-            $('#editBookModal').remove();
+fetchLanguages: function (callback) {
+    var System = new Library.Models.System();
+    System.getLanguages().done(function(response) {
+        if(callback && typeof callback === 'function') {
+            callback(response);
         }
+    });
+},
 
-        Utils.showSpinner();
+ fetchShelves: function (callback) {
+    var Locations = new Library.Models.Locations();
+    Locations.getShelves().done(function(response) {
+        if(callback && typeof callback === 'function') {
+            callback(response);
+        }
+    });
+},
 
-        $('#edit_container').append(self.template(bookData));
-            var editModal = new bootstrap.Modal('#editBookModal', {id: bookId});
-            var bookData = booksCollection.BookbyId(bookId).done(function(response) {
-            var bookData = response;
-            var System = new Library.Models.System();
-            var Locations = new Library.Models.Locations();
+fetchAuthors: function (callback) {
+    var Authors = booksCollection; // Assuming booksCollection has the getAuthors method
+    Authors.getAuthors().done(function(response) {
+        if(callback && typeof callback === 'function') {
+            callback(response);
+        }
+    });
+},
 
+displayLanguages: function (languages, selectedLanguageId) {
+        const priorityLangCodes = ['he', 'en', 'yi', 'ru', 'fr', 'ar'];
 
+        // Sort the languagesResponse[0] array so that priority languages come first
+        languages.sort(function(a, b) {
+            const indexA = priorityLangCodes.indexOf(a.lan_code);
+            const indexB = priorityLangCodes.indexOf(b.lan_code);
 
-            var editModalContent = `
+            if (indexA !== -1 && indexB === -1) {
+                return -1; // a is a priority language and comes before b
+            } else if (indexA === -1 && indexB !== -1) {
+                return 1; // b is a priority language and comes before a
+            } else if (indexA !== -1 && indexB !== -1) {
+                return indexA - indexB; // both are priority languages, sort them according to the priority order
+            }
+
+            // If neither a nor b is a priority language, optionally sort them by name or another attribute
+            return a.name_en.localeCompare(b.name_en);
+        });
+
+    var options = languages.map(function(language) {
+        var selected = (selectedLanguageId === language.id) ? ' selected ' : '';
+        return `<option value="${language.id}"${selected}>${language.name_lan}</option>`;
+    }).join('');
+
+    $("#editLanguage").html(options);
+},
+
+displayShelves: function (shelves, selectedShelfId) {
+    var options = shelves.map(function(shelf) {
+        var selected = (selectedShelfId === shelf.id) ? ' selected ' : '';
+        return `<option value="${shelf.id}"${selected}>${shelf.name}</option>`;
+    }).join('');
+
+    $("#editShelf").html(options);
+},
+
+displayAuthors: function (authors, selectedAuthorId= null, bookLanCode = null) {
+    var options = authors.map(function(author) {
+        var selected = (selectedAuthorId === author.id) ? ' selected ' : '';
+        var rtl = (Utils.detectLanguage(author.first_name) == 'he') ? 'rtl' : '';
+        if (Utils.detectLanguage(author.first_name) == bookLanCode) {
+            return `<option class="${rtl}" value="${author.id}"${selected}>${author.last_name}, ${author.first_name} ${author.middle_name} ${author.acronym ? '(' + author.acronym + ')' : ''}</option>`;
+        }
+    }).join('');
+
+    $("#editAuthor").html(options);
+},
+
+    fetchDataAndShowModal: function(bookId) {
+        var self = this; // Ensure 'self' is used to maintain context
+
+        booksCollection.BookbyId(bookId).done(function(bookData) {
+            self.bookData = bookData; // Store book data for later use
+
+            // Fetch and display languages, shelves, and authors
+            $.when(
+                self.fetchLanguages(function(languages) {
+                    self.displayLanguages(languages, bookData.language_id);
+                }),
+                self.fetchShelves(function(shelves) {
+                    self.displayShelves(shelves, bookData.shelf_number_id);
+                }),
+                self.fetchAuthors(function(authors) {
+                    self.displayAuthors(authors, bookData.author_id, bookData.language_code);
+                })
+            ).then(function() {
+                // Once all data is fetched and processed, show the modal
+                self.showEditBookModal(bookData);
+            });
+        });
+    },
+    refreshAuthors: function() {
+        var self = this; // Ensure 'self' is used to maintain context
+        self.bookData
+                self.fetchAuthors(function(authors) {
+                    self.displayAuthors(authors, self.bookData.author_id, self.bookData.language_code);
+                });
+    },
+
+showEditBookModal: function (bookData) {
+        var self = this;
+        var editModalContent = `
             <form id="editBookForm">
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-6">
-                            <h5>General Details</h5>
-                            <p><strong>BookID:</strong> ${Utils.formatValue(bookData.id)}  ${bookData.BookRef ? '<strong>Book Ref.:</strong>' + bookData.BookRef : ''}</p>
-                            <input type="hidden" id="bookId" value="${Utils.formatValue(bookData.id)}">
-                            <div class="mb-3">
-                            <div>
-                                <span><label for="editSeferNumber" class="form-label">Book Number</label>
-                                <input type="number" class="form-control" id="editSeferNumber" value="${Utils.formatValue(bookData.sefer_number)}">
-                                <div id="seferNumberValidation" class="text-danger"></div></span>
-                                <span>
-                                  <label for="editShelf" class="form-label">Shelf</label>
-                                  <select class="dropdown ui" id="editShelf">
-                                    ${ShelvesSelect}
-                                  </select>
-                                  </span>
-                                  </div>
-                            </div>
+                          <div class="col-md-6">
+                                <h5>General Details</h5>
+                                <p><strong>BookID:</strong> ${Utils.formatValue(bookData.id)}  ${bookData.BookRef ? '<strong>Book Ref.:</strong>' + bookData.BookRef : ''}</p>
+                                <input type="hidden" id="bookId" value="${Utils.formatValue(bookData.id)}">
+                                <div class="mb-3">
+                                    <div class="row">
+                                           <div class="col mb-2">
+                                                <label for="editSeferNumber" class="form-label">Book Number</label><br>
+                                                <div class="ui input"><input type="number" class="form-control" id="editSeferNumber" value="${Utils.formatValue(bookData.sefer_number)}"></div>
+                                               <span id="seferNumberValidation" class="text-danger"></span></span>
+                                            </div>
+                                             <div class="col mb-2">
+                                                  <label for="editShelf" class="form-label">Shelf</label><br>
+                                                  <select class="" id="editShelf">
+                                                  </select>
+                                             </div>
+                                             <div class="col mb-2">
+                                                  <button type="button" class="btn btn-primary" id="refresh_dropdown"><i class="bi bi-arrow-clockwise"></i></button>
+                                             </div>
+                                    </div>
+                                 </div>
                             <div class="mb-3">
                                 <label for="editTitle" class="form-label">Title</label>
-                                <input type="text" class="form-control ${(bookData.language_code === 'he') ? 'rtl' : 'ltr'}" id="editTitle" value="${Utils.formatValue(bookData.title)}">
+                                <div class="ui input"><input type="text" class="form-control ${(bookData.language_code === 'he') ? 'rtl' : 'ltr'}" id="editTitle" value="${Utils.formatValue(bookData.title)}"></div>
                             </div>
                             <div class="mb-3">
                                 <label for="editAuthor" class="form-label">Author</label>
-                                <select class="form-select dropdown ui" id="editAuthor">
-                                    ${Utils.formatValue(bookData.author_id)}
+                                <select class="form-select dropdown ui ${(bookData.language_code === 'he') ? 'rtl' : ''}" id="editAuthor">
                                 </select>
                             </div>
                              <div class="mb-3">
                                 <label for="editEdition" class="form-label">Edition</label>
-                                <input type="number" class="form-control ${(bookData.language_code === 'he') ? 'rtl' : 'ltr'}" id="editEdition" value="${Utils.formatValue(bookData.edition)}">
+                                <div class="ui input"><input type="number" class="form-control ${(bookData.language_code === 'he') ? 'rtl' : 'ltr'}" id="editEdition" value="${Utils.formatValue(bookData.edition)}"></div>
                             </div>
                              <div class="mb-3">
                                 <label for="editVolume" class="form-label">Volume</label>
-                                <input type="number" class="form-control" id="editVolume" value="${Utils.formatValue(bookData.volume)}">
+                                <div class="ui input"><input type="number" class="form-control" id="editVolume" value="${Utils.formatValue(bookData.volume)}"></div>
                             </div>
                             <div class="mb-3">
                                 <label for="editVolumeName" class="form-label">Volume Name</label>
-                                <input type="text" class="form-control" id="editVolumeName" value="${Utils.formatValue(bookData.volume_name)}">
+                                <div class="ui input"><input type="text" class="form-control" id="editVolumeName" value="${Utils.formatValue(bookData.volume_name)}"></div>
                             </div>
                             <div class="mb-3">
                                 <label for="editType" class="form-label">Type</label>
-                                <input type="text" class="form-control" id="editType" value="${Utils.formatValue(bookData.type)}">
+                                <div class="ui input"><input type="text" class="form-control" id="editType" value="${Utils.formatValue(bookData.type)}"></div>
                             </div>
                             <div class="mb-3">
                                 <label for="editLanguage" class="form-label">Book Language</label>
                                 <select class="dropdown ui" id="editLanguage">
-                                    ${LanguagesSelect}
                                 </select>
                             </div>
                             <div class="mb-3">
@@ -582,7 +677,7 @@ Library.EditBookView = Backbone.View.extend({
                             </div>
                             <div class="mb-3">
                                 <label for="editPublisher" class="form-label">Publisher</label>
-                                <input type="text" class="form-control" id="editPublisher" value="${Utils.formatValue(bookData.publisher)}">
+                               <div class="ui input"> <input type="text" class="form-control" id="editPublisher" value="${Utils.formatValue(bookData.publisher)}"></div>
                             </div>
                             <!-- Add more input fields for other classification & publication details here -->
                         </div>
@@ -603,37 +698,38 @@ Library.EditBookView = Backbone.View.extend({
                 </div>
             </form>
         `;
+    // Append the modal content to the page
+    $(self.el).append(self.template(bookData));
+    $('#editBookContent').append(editModalContent);
 
-                $('#editBookContent').append(editModalContent);
-                var Languages = [];
-                var LanguagesSelect = '';
-                System.getLanguages().done(function(response) {
-                    Languages = response.map(function(language) {
-                        var selected = (bookData.language_id === language.id) ? ' selected ' : '';
-                        return `<option value="${language.id}" ${selected} >${language.name_lan}</option>`;
-                    });
-                    Languages.forEach(function(language) {
-                        LanguagesSelect += language;
-                    });
-                    $('#editLanguage').append(LanguagesSelect);
-                });
-                var Shelves = [];
-                var ShelvesSelect = '';
-                Locations.getShelves().done(function(response) {
-                    Shelves = response.map(function(shelf) {
-                        var selected = (bookData.shelf_number_id === shelf.id) ? ' selected ' : '';
-                        return `<option value="${shelf.id}" ${selected} >${shelf.name}</option>`;
-                    });
-                    Shelves.forEach(function(shelf) {
-                        ShelvesSelect += shelf;
-                    });
-                    $('#editShelf').append(ShelvesSelect);
-                });
-                $('.dropdown').dropdown();
-                Utils.hideSpinner();
-                editModal.show();
-            });
-    },
+    // Initialize and show the modal now that data is ready and DOM is updated
+    var editModal = new bootstrap.Modal(document.getElementById('editBookModal'), {});
+
+    Utils.hideSpinner();
+    editModal.show();
+
+    $(window).on('shown.bs.modal', function() {
+        $('#editShelf').addClass('ui dropdown selection search').dropdown({fullTextSearch: 'exact', selectOnBlur: false, forceSelection: false, showOnFocus: false,sortSelect: true});
+    });
+
+},
+
+render: function(bookId) {
+    var self = this;
+    // Remove existing modal to prevent duplicates
+    if ($('#editBookModal').length > 0) {
+        $('#editBookModal').remove();
+    }
+
+    // Show loading spinner
+    Utils.showSpinner();
+
+    booksCollection.BookbyId(bookId).done(function (bookData) {
+        self.bookData = bookData;
+        // Define a function to fetch and process all necessary data
+        self.fetchDataAndShowModal(bookId);
+    });
+},
 
     saveBook: function() {
         var formData = {
@@ -657,18 +753,30 @@ Library.EditBookView = Backbone.View.extend({
         }
     },
     validateSeferNumber: function(bookId = null) {
+        var self = this;
         var seferNumber = this.$('#editSeferNumber').val();
         var shelfId = this.$('#editShelf').val();
+        var shelfName = this.$('#editShelf option:selected').text();
         var bookId = this.$('#bookId').val();
-
+        Utils.showSpinner('Validating Sefer Number');
         this.booksCollection.validateSeferNumber(seferNumber, shelfId, bookId).then(
             function(response) {
-                $('#editSeferNumber').data('valid', true); // Setting data attribute to true
-                $('#seferNumberValidation').removeClass('text-danger').addClass('text-success sm-2').html('<i class="bi bi-check-circle-fill"></i>');
+                if (response.success) {
+                    $('#editSeferNumber').data('valid', true); // Setting data attribute to true
+                    $('#seferNumberValidation').removeClass('text-danger').addClass('text-success sm-2').html('<i class="bi bi-check-circle-fill"></i> Sefer Number is valid for this shelf (' + shelfName + ')');
+                } else if (response.success === false) {
+                    $('#editSeferNumber').data('valid', false); // Setting data attribute to false
+                    $('#seferNumberValidation').removeClass('text-success').addClass('text-danger sm-2').html('<i class="bi bi-exclamation-circle-fill"></i> ' + 'Invalid Sefer Number');
+                } else if (response.error) {
+                    $('#editSeferNumber').data('valid', false); // Setting data attribute to false
+                    $('#seferNumberValidation').removeClass('text-success').addClass('text-danger sm-2').html('<i class="bi bi-exclamation-circle-fill"></i> ' + 'Validation Error, the system will apply the next available sefer number');
+                }
+                Utils.hideSpinner();
             },
             function(error) {
                 $('#editSeferNumber').data('valid', false); // Setting data attribute to false
-                $('#seferNumberValidation').removeClass('text-success').addClass('text-danger sm-2').html('<i class="bi bi-exclamation-circle-fill"></i> ' + error);
+                $('#seferNumberValidation').removeClass('text-success').addClass('text-danger sm-2').html('<i class="bi bi-exclamation-circle-fill"></i> ' + 'Invalid Sefer Number');
+                Utils.hideSpinner();
             }
         );
     }

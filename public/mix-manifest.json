@@ -3,6 +3,7 @@
     "/js/core.js": "/js/core.js",
     "/js/app.js": "/js/app.js",
     "/js/forms.js": "/js/forms.js",
+    "/js/tools.js": "/js/tools.js",
     "/js/semantic.js": "/js/semantic.js",
     "/css/app.css": "/css/app.css",
     "/css/bootstrap-icons.css": "/css/bootstrap-icons.css",
@@ -35,6 +36,6 @@
     "/css/themes/default/assets/fonts/brand-icons.woff2": "/css/themes/default/assets/fonts/brand-icons.woff2",
     "/css/themes/default/assets/fonts/outline-icons.woff": "/css/themes/default/assets/fonts/outline-icons.woff",
     "/css/themes/default/assets/fonts/outline-icons.woff2": "/css/themes/default/assets/fonts/outline-icons.woff2",
-    "/css/fonts/bootstrap-icons.woff": "/css/fonts/bootstrap-icons.woff",
-    "/css/fonts/bootstrap-icons.woff2": "/css/fonts/bootstrap-icons.woff2"
+    "/fonts/vendor/bootstrap-icons/bootstrap-icons.woff": "/fonts/vendor/bootstrap-icons/bootstrap-icons.woff",
+    "/fonts/vendor/bootstrap-icons/bootstrap-icons.woff2": "/fonts/vendor/bootstrap-icons/bootstrap-icons.woff2"
 }

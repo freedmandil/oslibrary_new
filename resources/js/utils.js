@@ -104,8 +104,8 @@ function renderMessage(options) {
 function renderToast(message, bootstrapOptions) {
     var toast =
         '<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11">' +
-        '<div id="liveToast" class="toast ' + bootstrapOptions.bg + ' ' + bootstrapOptions.border + ' border-2" role="alert" aria-live="assertive" aria-atomic="true">' +
-        '<div class="toast-header ' + bootstrapOptions.border + '">' +
+        '<div id="liveToast" class="toast ' + bootstrapOptions.alert + ' ' + bootstrapOptions.border + ' border-2" role="alert" aria-live="assertive" aria-atomic="true">' +
+        '<div class="toast-header ">' +
         '<span class="fw-bold">' + bootstrapOptions.title + '</span>' +
         '</div>' +
         '<div class="toast-body fw-bold ' + bootstrapOptions.text + '">' +
@@ -178,4 +178,28 @@ Utils.sendSysMessage = function (type, level, message){
 
 Utils.formatValue = function (value) {
     return value ? value : '';
+}
+
+Utils.stripPunctuation = function (str) {
+    // Define the regular expression pattern to match punctuation
+    // Adjusted the pattern to match non-letter, non-number, non-space characters
+    const pattern = /[^\w\s]/g;
+
+    // Use replace to remove all punctuation characters from the string
+    const cleanedStr = str.replace(pattern, '');
+
+    return cleanedStr;
+}
+
+Utils.detectLanguage = function (string) {
+
+    // Check for the presence of Hebrew characters in the string
+    const HebChars = /[\u0590-\u05FF]/.test(string);
+
+    if (HebChars) {
+        // Hebrew Unicode block ranges from U+0590 to U+05FF
+        return 'he';
+    } else {
+        return 'en';
+    }
 }

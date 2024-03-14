@@ -181,7 +181,7 @@ function renderMessage(options) {
   // Append the message to the container element
 }
 function renderToast(message, bootstrapOptions) {
-  var toast = '<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11">' + '<div id="liveToast" class="toast ' + bootstrapOptions.bg + ' ' + bootstrapOptions.border + ' border-2" role="alert" aria-live="assertive" aria-atomic="true">' + '<div class="toast-header ' + bootstrapOptions.border + '">' + '<span class="fw-bold">' + bootstrapOptions.title + '</span>' + '</div>' + '<div class="toast-body fw-bold ' + bootstrapOptions.text + '">' + message + '</div>' + '</div>' + '</div>';
+  var toast = '<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 11">' + '<div id="liveToast" class="toast ' + bootstrapOptions.alert + ' ' + bootstrapOptions.border + ' border-2" role="alert" aria-live="assertive" aria-atomic="true">' + '<div class="toast-header ">' + '<span class="fw-bold">' + bootstrapOptions.title + '</span>' + '</div>' + '<div class="toast-body fw-bold ' + bootstrapOptions.text + '">' + message + '</div>' + '</div>' + '</div>';
   return toast;
 }
 function renderAlert(message, bootstrapOptions) {
@@ -220,6 +220,25 @@ Utils.sendSysMessage = function (type, level, message) {
 };
 Utils.formatValue = function (value) {
   return value ? value : '';
+};
+Utils.stripPunctuation = function (str) {
+  // Define the regular expression pattern to match punctuation
+  // Adjusted the pattern to match non-letter, non-number, non-space characters
+  var pattern = /[^\w\s]/g;
+
+  // Use replace to remove all punctuation characters from the string
+  var cleanedStr = str.replace(pattern, '');
+  return cleanedStr;
+};
+Utils.detectLanguage = function (string) {
+  // Check for the presence of Hebrew characters in the string
+  var HebChars = /[\u0590-\u05FF]/.test(string);
+  if (HebChars) {
+    // Hebrew Unicode block ranges from U+0590 to U+05FF
+    return 'he';
+  } else {
+    return 'en';
+  }
 };
 
 /***/ })

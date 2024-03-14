@@ -42,7 +42,7 @@
                     <label for="shelf_number">Shelf Number:</label>
                     <div class="row">
                         <div class="col">
-                            <input type="text" class="form-control shelf_number_input" id="shelf_number_text" name="shelf_number_text" placeholder="Enter Shelf Number">
+                            <div class="ui input"><input type="text" class="form-control shelf_number_input" id="shelf_number_text" name="shelf_number_text" placeholder="Enter Shelf Number"></div>
                         </div>
                         <div class="col">
                             <select class="form-control shelf_number_input ui search selection dropdown" id="shelf_number_dropdown" name="shelf_number">

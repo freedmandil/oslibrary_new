@@ -29,6 +29,7 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth:sanctum' => \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
         'restrictByIP' => \App\Http\Middleware\RestrictByIP::class,
+        'customThrottle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     ];
 
     /**
