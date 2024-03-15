@@ -74,10 +74,13 @@ class AuthorController extends Controller
 
         // Proceed to create the author if validation passes
         $author = new LibAuthor();
+        $author->prefix = $request->prefix;
         $author->first_name = $request->first_name;
+        $author->middle_name = $request->middle_name;
         $author->last_name = $request->last_name;
         $author->acronym = $request->acronym;
-        // Set other fields as necessary
+        $author->suffix = $request->suffix;
+        $author->nickname = $request->nickname;
         $author->save();
 
         return response()->json(['message' => 'Author created successfully', 'data' => $author], 201);
